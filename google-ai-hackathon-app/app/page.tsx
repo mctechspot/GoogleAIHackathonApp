@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Logo from "@/public/assets/logo-dark.png";
+import BannerGif from "@/public/assets/banner-gif.gif";
+
 import Link from "next/link";
 import Footer from "@/app/components/Navigation/Footer"
 
@@ -12,17 +14,17 @@ export default function Home() {
           <div>
             <Link href={"/"}>
               <Image
-                src={Logo}
+                src={BannerGif}
                 alt={"Logo"}
                 height={"106"}
                 width={"250"}
-                className={"block m-auto mb-2 h-auto w-[250px]"}
+                className={"block m-auto mb-2 h-auto w-full"}
               />
             </Link>
 
-            <p className={`text-center my-[50px]`}>
+            {/*<p className={`text-center my-[50px]`}>
               intelligent literary content generator
-            </p>
+            </p>*/}
 
             <Link href={"/generate"}
               className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center rounded-lg"}>
