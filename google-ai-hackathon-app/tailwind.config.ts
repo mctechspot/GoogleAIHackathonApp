@@ -15,7 +15,8 @@ const config: Config = {
       },
       colors: {
         "green": {
-          "standard": "#ABDEC9"
+          "standard": "#ABDEC9",
+          "text": "#3FA279"
         }
       },
       fontFamily: {

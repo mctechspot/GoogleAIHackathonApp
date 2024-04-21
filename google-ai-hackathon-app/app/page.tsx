@@ -10,20 +10,22 @@ export default function Home() {
 
         <div className={"h-full w-full flex justify-center items-center"}>
           <div>
-            <Image
-              src={Logo}
-              alt={"Logo"}
-              height={"106"}
-              width={"250"}
-              className={"block m-auto mb-2 h-auto w-[250px]"}
-            />
+            <Link href={"/"}>
+              <Image
+                src={Logo}
+                alt={"Logo"}
+                height={"106"}
+                width={"250"}
+                className={"block m-auto mb-2 h-auto w-[250px]"}
+              />
+            </Link>
 
             <p className={`text-center my-[50px]`}>
               intelligent literary content generator
             </p>
 
-            <Link href={"/generate"} 
-            className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center rounded-lg"}>
+            <Link href={"/generate"}
+              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center rounded-lg"}>
               Try
             </Link>
           </div>
