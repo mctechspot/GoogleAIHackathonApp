@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Logo from "@/public/assets/logo-dark.png";
 import Link from "next/link";
-import Footer from "@/app/components/Navigation/Footer"
+import Footer from "@/app/components/Navigation/Footer";
 
 export default function About() {
     return (
@@ -43,6 +43,7 @@ export default function About() {
 
                 </div>
 
+                {/* Footer */}
                 <div>
                     <Footer />
                 </div>

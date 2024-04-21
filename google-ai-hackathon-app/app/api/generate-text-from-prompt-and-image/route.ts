@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server"
 export async function POST(request: NextRequest, response: NextResponse){
     try{
         const payload = await request.formData();
-        console.log(payload);
 
         const generateContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-text-from-image`, {
             "body": payload,

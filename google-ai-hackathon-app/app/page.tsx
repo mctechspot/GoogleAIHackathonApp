@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Logo from "@/public/assets/logo-dark.png";
 import BannerGif from "@/public/assets/banner-gif.gif";
-
 import Link from "next/link";
-import Footer from "@/app/components/Navigation/Footer"
+import Footer from "@/app/components/Navigation/Footer";
 
 export default function Home() {
   return (
@@ -15,7 +14,7 @@ export default function Home() {
             <Link href={"/"}>
               <Image
                 src={BannerGif}
-                alt={"Logo"}
+                alt={"Home Banner"}
                 height={"106"}
                 width={"250"}
                 className={"block m-auto mb-2 h-auto w-full"}
@@ -34,6 +33,7 @@ export default function Home() {
 
         </div>
 
+        {/* Footer */}
         <div>
           <Footer />
         </div>
