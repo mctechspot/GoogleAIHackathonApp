@@ -6,15 +6,21 @@ import ContentTypeDropdown from "@/app/components/Dropdown/ContentTypeDropdown";
 import Header from "@/app/components/Navigation/Header";
 import Footer from "@/app/components/Navigation/Footer";
 import UserPromptForm from "@/app/components/Forms/UserPromptForm";
+import GeneratedContent from "@/app/components/Content/GeneratedContent";
 import { UserFormProps, UserFormType } from "@/app/types/Forms";
+import { GeneratedContentError, GeneratedContentSuccess, GeneratedContentWarnings } from "@/app/types/Response";
 
 export default function GenerateScreen() {
 
     const [userPrompt, setUserPrompt] = useState<UserFormProps>({
         "prompt": "",
         "image": null,
-        "contentType": "1"
+        "content_type": "1"
     });
+
+    const [contentGenerationRunning, setContentGenerationRunning] = useState<boolean>(false);
+
+    const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedContentSuccess | GeneratedContentWarnings | null>(null);
 
     return (
         <>
@@ -29,9 +35,8 @@ export default function GenerateScreen() {
 
                     <div>
 
-
                         <div className={"mx-20 my-5"}>
-                            <div className={"grid grid-cols-2 gap-2"}>
+                            <div className={"grid grid-cols-2 gap-5"}>
 
                                 {/* User Prompt Form */}
                                 <div className={"w-full"}>
@@ -47,6 +52,10 @@ export default function GenerateScreen() {
                                     <UserPromptForm
                                     userPrompt={userPrompt}
                                     setUserPrompt={setUserPrompt}
+                                    contentGenerationRunning={contentGenerationRunning}
+                                    setContentGenerationRunning={setContentGenerationRunning}
+                                    generatedContent={generatedContent}
+                                    setGeneratedContent={setGeneratedContent}
                                     />
 
                                     
@@ -54,6 +63,14 @@ export default function GenerateScreen() {
 
                                 {/* Generated Content */}
                                 <div className={"w-full"}>
+                                <GeneratedContent
+                                    userPrompt={userPrompt}
+                                    setUserPrompt={setUserPrompt}
+                                    contentGenerationRunning={contentGenerationRunning}
+                                    setContentGenerationRunning={setContentGenerationRunning}
+                                    generatedContent={generatedContent}
+                                    setGeneratedContent={setGeneratedContent}
+                                    />
                                 </div>
 
                             </div>

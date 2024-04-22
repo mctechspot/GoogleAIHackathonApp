@@ -1,12 +1,37 @@
 import Link from "next/link";
-import { ContentDropdownProps, UserFormProps, UserFormType } from "@/app/types/Forms"
+import { ContentDropdownProps, UserFormProps, UserFormType, CompleteUserFormType } from "@/app/types/Forms"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 
-export default function UserPromptForm({userPrompt, setUserPrompt}: UserFormType) {
+export default function UserPromptForm(
+    { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
+        generatedContent, setGeneratedContent }: CompleteUserFormType) {
 
-    const handleUserPromptSubmit = (event: any): void => {
+    const handleUserPromptSubmit = async (event: any): Promise<void> => {
         event.preventDefault();
-    };
+        setGeneratedContent(null);
+        setContentGenerationRunning(false);
+
+        let payload;
+
+
+        if (userPrompt.image) {
+            // Handle case where image is included in prompt
+        } else {
+            // Handle case where no image is included in prompt
+            payload = userPrompt;
+        }
+
+        setContentGenerationRunning(true);
+        const contentRes: Response = await fetch("/api/generate-text-from-prompt", {
+            "body": JSON.stringify(payload),
+            "method": "POST"
+        });
+
+        const contentJson = await contentRes.json();
+        console.log(contentJson);
+        setContentGenerationRunning(false);
+        setGeneratedContent(contentJson);
+    }
 
     return (
         <>

@@ -21,6 +21,12 @@ const config: Config = {
         },
         "grey": {
           "pale": "#ADADAD"
+        },
+        "red": {
+          "error": "#800800"
+        },
+        "yellow":{
+          "warning": "#A37E02"
         }
       },
       fontFamily: {

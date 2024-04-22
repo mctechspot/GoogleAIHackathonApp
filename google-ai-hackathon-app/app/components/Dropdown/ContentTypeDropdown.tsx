@@ -52,7 +52,7 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt }: UserF
                     <div>
                         <div className={"flex items-center justify-center gap-2"}>
                             <div>
-                                {contentTypes.find((item: ContentDropdownProps, index: number) => item.key === userPrompt.contentType).value}
+                                {contentTypes.find((item: ContentDropdownProps, index: number) => item.key === userPrompt.content_type).value}
                             </div>
                             <div className={"text-green-text"}>
                                 {openDropdown ? <FaChevronUp /> : <FaChevronDown />}
@@ -69,10 +69,10 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt }: UserF
                                 return (
                                     <>
                                         <div
-                                            className={`${userPrompt.contentType === contentType.key ? "bg-green-standard" : ""}
+                                            className={`${userPrompt.content_type === contentType.key ? "bg-green-standard" : ""}
                                     hover:bg-green-standard w-full py-2 px-10 w-full cursor-pointer`}
                                             onClick={() => {
-                                                setUserPrompt({ ...userPrompt, contentType: contentType.key });
+                                                setUserPrompt({ ...userPrompt, content_type: contentType.key });
                                                 setOpenDropdown(false);
                                             }}>
                                             {contentType.value}
