@@ -72,7 +72,7 @@ export default function UserPromptForm(
                 <textarea
                     id={"prompt-text"} name={"prompt-text"}
                     placeholder={"Give a topic for your content, e.g. island dreams."}
-                    className={"border grey-pale rounded min-w-full min-h-[300px]\
+                    className={"border grey-pale rounded min-w-full min-h-[200px]\
                                             outline-green-standard resize-y p-5"}
                     value={userPrompt.prompt}
                     onChange={(event) => setUserPrompt({ ...userPrompt, prompt: event.target.value })}
@@ -109,7 +109,8 @@ export default function UserPromptForm(
 
 
                 <div className={"flex gap-2 w-full"}>
-                    <button type={"submit"} className={"bg-green-standard rounded p-2 w-full"}>Generate</button>
+                    <button type={"submit"} className={"bg-green-standard rounded p-2 w-full disabled:bg-green-disabled"}
+                    disabled={contentGenerationRunning}>Generate</button>
                     <button type={"button"} className={"bg-green-standard rounded p-2 w-full"}
                         onClick={() => {
                             setUserPrompt({ ...userPrompt, prompt: "", image: null });

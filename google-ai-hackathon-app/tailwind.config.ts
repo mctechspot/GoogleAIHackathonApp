@@ -16,6 +16,7 @@ const config: Config = {
       colors: {
         "green": {
           "standard": "#ABDEC9",
+          "pale": "#F2FCF8",
           "disabled": "#BBC9C4",
           "text": "#3FA279"
         },

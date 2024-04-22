@@ -21,10 +21,10 @@ export default function GeneratedContent(
             setContentCopied(true);
             navigator.clipboard.writeText(generatedContent.response);
 
-            // Change copy state for 3 seconds
+            // Change copy state for 2 seconds
             setTimeout(() => {
                 setContentCopied(false);
-            }, 3000);
+            }, 2000);
         }
     }
 
@@ -94,23 +94,25 @@ export default function GeneratedContent(
                         {"response" in generatedContent ? (
                             <>
                                 <div className={"m-2"} >
-                                    <p className={"text-center text-green-text font-black"}>Here's your content!</p><br />
-                                    <div className={"flex justify-end w-full cursor-pointer"}>
-                                        {contentCopied ? (
-                                            <>
-                                                <div className={"flex items-center gap-2"}>
-                                                    <p className={"text-right text-sm text-green-text font-black"}>Copied</p>
-                                                    <FaClipboardCheck className={"text-right text-xl text-green-text font-black"} />
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <FaRegClipboard className={"text-right text-xl text-green-text font-black"}
-                                                    onClick={() => copyContent()} />
-                                            </>
-                                        )}
-                                    </div><br />
-                                    <div ref={generatedContentRef}></div>
+                                    <p className={"text-center text-green-text font-black"}>Here&apos;s your content!</p><br />
+                                    <div className={"bg-green-pale rounded p-5"}>
+                                        <div className={"flex justify-end w-full cursor-pointer"}>
+                                            {contentCopied ? (
+                                                <>
+                                                    <div className={"flex items-center gap-2"}>
+                                                        <p className={"text-right text-sm text-green-text font-black"}>Copied</p>
+                                                        <FaClipboardCheck className={"text-right text-xl text-green-text font-black"} />
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaRegClipboard className={"text-right text-xl text-green-text font-black"}
+                                                        onClick={() => copyContent()} />
+                                                </>
+                                            )}
+                                        </div><br />
+                                        <div ref={generatedContentRef}></div>
+                                    </div>
                                 </div>
                             </>
                         ) : ("")}
