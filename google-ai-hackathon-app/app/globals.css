@@ -2,7 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-.page-container{
+:root{
+    --green-standard: #ABDEC9;
+}
+
+input::file-selector-button {
+    background-color: var(--green-standard);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.page-container {
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
@@ -10,13 +22,14 @@
 
 .spin {
     animation: spin 1.0s linear infinite;
-  }
-  
-  @keyframes spin {
+}
+
+@keyframes spin {
     0% {
-      transform: rotate(0deg);
+        transform: rotate(0deg);
     }
+
     100% {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
+}

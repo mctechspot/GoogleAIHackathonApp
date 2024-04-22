@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react"
 import Image from "next/image";
 import Link from "next/link";
-import ContentTypeDropdown from "@/app/components/Dropdown/ContentTypeDropdown";
 import Header from "@/app/components/Navigation/Header";
 import Footer from "@/app/components/Navigation/Footer";
 import UserPromptForm from "@/app/components/Forms/UserPromptForm";
@@ -32,51 +31,39 @@ export default function GenerateScreen() {
                 </div>
 
                 <div>
-
                     <div>
-
-                        <div className={"mx-20 my-5"}>
-                            <div className={"grid grid-cols-2 gap-5"}>
+                        <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
+                            <div className={"grid grid-cols-2 gap-20 max-[850px]:grid-cols-1"}>
 
                                 {/* User Prompt Form */}
                                 <div className={"w-full"}>
 
-                                    <p>Enter a prompt. Get your content.</p><br />
-
-                                    {/* Content Type Generator */}
-                                    <ContentTypeDropdown 
-                                    userPrompt={userPrompt}
-                                    setUserPrompt={setUserPrompt}
-                                    /><br />
-
                                     <UserPromptForm
-                                    userPrompt={userPrompt}
-                                    setUserPrompt={setUserPrompt}
-                                    contentGenerationRunning={contentGenerationRunning}
-                                    setContentGenerationRunning={setContentGenerationRunning}
-                                    generatedContent={generatedContent}
-                                    setGeneratedContent={setGeneratedContent}
+                                        userPrompt={userPrompt}
+                                        setUserPrompt={setUserPrompt}
+                                        contentGenerationRunning={contentGenerationRunning}
+                                        setContentGenerationRunning={setContentGenerationRunning}
+                                        generatedContent={generatedContent}
+                                        setGeneratedContent={setGeneratedContent}
                                     />
 
-                                    
+
                                 </div>
 
                                 {/* Generated Content */}
                                 <div className={"w-full"}>
-                                <GeneratedContent
-                                    userPrompt={userPrompt}
-                                    setUserPrompt={setUserPrompt}
-                                    contentGenerationRunning={contentGenerationRunning}
-                                    setContentGenerationRunning={setContentGenerationRunning}
-                                    generatedContent={generatedContent}
-                                    setGeneratedContent={setGeneratedContent}
+                                    <GeneratedContent
+                                        userPrompt={userPrompt}
+                                        setUserPrompt={setUserPrompt}
+                                        contentGenerationRunning={contentGenerationRunning}
+                                        setContentGenerationRunning={setContentGenerationRunning}
+                                        generatedContent={generatedContent}
+                                        setGeneratedContent={setGeneratedContent}
                                     />
                                 </div>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 {/* Footer */}

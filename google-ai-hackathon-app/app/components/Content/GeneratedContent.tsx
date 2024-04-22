@@ -3,13 +3,15 @@ import { RefObject, useEffect, useRef, useState } from "react"
 import { CompleteUserFormType } from "@/app/types/Forms";
 import { CgSpinner } from "react-icons/cg";
 import { FaCopy, FaRegCopy, FaClipboard, FaClipboardCheck, FaRegClipboard } from "react-icons/fa";
-
+import { IoIosWarning } from "react-icons/io";
+import { MdError } from "react-icons/md";
 
 
 export default function GeneratedContent(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
         generatedContent, setGeneratedContent }: CompleteUserFormType) {
 
+    const generatedContentContainer: RefObject<HTMLDivElement> | null = useRef(null);
     const generatedContentRef: RefObject<HTMLDivElement> | null = useRef(null);
     const [contentCopied, setContentCopied] = useState<boolean>(false);
 
@@ -29,25 +31,45 @@ export default function GeneratedContent(
     // Function to display generated content
     const displayGeneratedContent = (): void => {
         if (generatedContent && "response" in generatedContent) {
-            const generatedContentRefElement = generatedContentRef?.current;
-            if (generatedContentRefElement) {
-                generatedContentRefElement.innerHTML = generatedContent.response;
+            const generatedContentElement = generatedContentRef?.current;
+            if (generatedContentElement) {
+
+                // Format content for html
+
+                // Replace "\n" line breaks with <br> tags
+                let formattedContent = generatedContent.response.replaceAll(/\n/g, "<br>");
+
+                // Replace ** content ** to reflect <b>content</b> format
+                formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                console.log(formattedContent);
+                generatedContentElement.innerHTML = formattedContent;
             };
         }
     };
 
+    // Display content once it is successfully generated
     useEffect(() => {
         if (generatedContent && "response" in generatedContent) {
             displayGeneratedContent();
         }
     }, [generatedContent]);
 
+    // Scroll content generation loader into view once endpoint is running
+    useEffect(() => {
+        if (contentGenerationRunning) {
+            const generatedContentContainerElement = generatedContentContainer?.current;
+            if (generatedContentContainerElement) {
+                generatedContentContainerElement.scrollIntoView({ behavior: "smooth" });
+            };
+        }
+    }, [contentGenerationRunning]);
+
     return (
         <>
-            <div className={""}>
+            <div className={""} ref={generatedContentContainer}>
                 {!generatedContent && !contentGenerationRunning ? (
                     <>
-                        <p className={"text-center"}>Your generated content will appear here.</p>
+                        <p className={"text-center text-green-text font-black"}>Your generated content will appear here.</p>
                     </>
                 ) : ("")}
 
@@ -71,7 +93,7 @@ export default function GeneratedContent(
                         {/* Display successful content response */}
                         {"response" in generatedContent ? (
                             <>
-                                <div className={"m-2"}>
+                                <div className={"m-2"} >
                                     <p className={"text-center text-green-text font-black"}>Here's your content!</p><br />
                                     <div className={"flex justify-end w-full cursor-pointer"}>
                                         {contentCopied ? (
@@ -97,6 +119,9 @@ export default function GeneratedContent(
                         {"warnings" in generatedContent ? (
                             <>
                                 <div className={"m-2"}>
+                                    <div className={"flex justify-center text-center text-[50px] text-yellow-warning font-black"}>
+                                        <IoIosWarning />
+                                    </div><br />
                                     <p className={"text-center text-yellow-warning font-black"}>{generatedContent.warnings.join(" ")}</p><br />
                                 </div>
                             </>
@@ -107,6 +132,9 @@ export default function GeneratedContent(
                         {"error" in generatedContent ? (
                             <>
                                 <div className={"m-2"}>
+                                    <div className={"flex justify-center text-center text-[50px] text-red-error font-black"}>
+                                        <MdError />
+                                    </div><br />
                                     <p className={"text-center text-red-error font-black"}>Error generating content. Try again.</p><br />
                                 </div>
                             </>
