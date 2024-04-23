@@ -14,13 +14,13 @@ export default function GeneratedArtGrid({ response_images, orientation }: Gener
                         <>
                             <div className={"relative"}>
                                 <div key={`generated-image-container-${index + 1}`}
-                                    className={`relative block m-auto h-[300px] w-full rounded`}>
+                                    className={`relative block m-auto h-auto w-full rounded`}>
                                     <Image
                                         src={`data:image/png;base64,${contentSrc}`}
                                         alt={`Generated Image ${index + 1}`}
                                         height={"300"}
                                         width={"300"}
-                                        className={"block m-auto h-full w-full object-fit rounded"}
+                                        className={"block m-auto h-auto w-full rounded"}
                                         key={`genrated-image-${index + 1}`}
                                     />
                                 </div>

@@ -40,6 +40,10 @@ export const artContentTypes: ContentDropdownProps[] = [
     },
     {
         "key": "5",
+        "value": "Digital"
+    },
+    {
+        "key": "6",
         "value": "Sketch"
     }
 ];
