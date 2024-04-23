@@ -1,29 +1,15 @@
 "use client"
 import { RefObject, useEffect, useRef, useState } from "react"
-import Image from "next/image";
-import Link from "next/link";
-import Logo from "@/public/assets/logo-dark.png";
 import { ContentDropdownProps, UserFormProps, UserFormType } from "@/app/types/Forms"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
+import { literatureContentTypes, artContentTypes, artOrientations } from "@/app/constants/DropdownConstants"
 
-export default function ContentTypeDropdown({ userPrompt, setUserPrompt }: UserFormType) {
+export default function ContentTypeDropdown({ userPrompt, setUserPrompt, contentCategory }: UserFormType) {
+
 
     const [openDropdown, setOpenDropdown] = useState<boolean>(false);
     const dropdownRef: RefObject<HTMLDivElement> | null = useRef(null);
-    const contentTypes: any[] = [
-        {
-            "key": "1",
-            "value": "Story"
-        },
-        {
-            "key": "2",
-            "value": "Poem"
-        },
-        {
-            "key": "3",
-            "value": "Song"
-        }
-    ];
+    const [dropdownData, setDropdownData] = useState<any[]>(literatureContentTypes);
 
     useEffect(() => {
         window.addEventListener('click', toggleDropdown);
@@ -40,6 +26,14 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt }: UserF
         };
     };
 
+    useEffect(() => {
+        if(contentCategory === 1){
+            setDropdownData(literatureContentTypes);
+        }else{
+            setDropdownData(artContentTypes);
+        }
+    }, [contentCategory]);
+
     return (
         <>
             <div className={"w-fit relative"} ref={dropdownRef}>
@@ -52,7 +46,7 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt }: UserF
                     <div>
                         <div className={"flex items-center justify-center gap-2"}>
                             <div>
-                                {contentTypes.find((item: ContentDropdownProps, index: number) => item.key === userPrompt.content_type).value}
+                                {dropdownData.find((dropdownDataEntry: ContentDropdownProps, index: number) => dropdownDataEntry.key === userPrompt.content_type).value}
                             </div>
                             <div className={"text-green-text"}>
                                 {openDropdown ? <FaChevronUp /> : <FaChevronDown />}
@@ -65,17 +59,17 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt }: UserF
                     <>
                         {/* Dropdown Options */}
                         <div className={"absolute bg-white border border-green-standard rounded mt-2"}>
-                            {contentTypes.map((contentType: any, index: number) => {
+                            {dropdownData.map((dropdownDataEntry: any, index: number) => {
                                 return (
                                     <>
                                         <div
-                                            className={`${userPrompt.content_type === contentType.key ? "bg-green-standard" : ""}
+                                            className={`${userPrompt.content_type === dropdownDataEntry.key ? "bg-green-standard" : ""}
                                     hover:bg-green-standard w-full py-2 px-10 w-full cursor-pointer`}
                                             onClick={() => {
-                                                setUserPrompt({ ...userPrompt, content_type: contentType.key });
+                                                setUserPrompt({ ...userPrompt, content_type: dropdownDataEntry.key });
                                                 setOpenDropdown(false);
                                             }}>
-                                            {contentType.value}
+                                            {dropdownDataEntry.value}
                                         </div>
                                     </>
                                 )

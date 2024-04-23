@@ -7,17 +7,23 @@ import Footer from "@/app/components/Navigation/Footer";
 import UserPromptForm from "@/app/components/Forms/UserPromptForm";
 import GeneratedContent from "@/app/components/Content/GeneratedContent";
 import { UserFormProps, UserFormType } from "@/app/types/Forms";
-import { GeneratedContentError, GeneratedContentSuccess, GeneratedContentWarnings } from "@/app/types/Response";
+import { 
+    GeneratedContentError, 
+    GeneratedLiteratureContentSuccess, 
+    GeneratedArtContentSuccess, 
+    GeneratedContentWarnings 
+} from "@/app/types/Response";
 
 export default function GenerateScreen() {
 
     const [userPrompt, setUserPrompt] = useState<UserFormProps>({
         "prompt": "",
         "image": null,
-        "content_type": "1"
+        "content_type": "1",
+        "orientation": "1"
     });
     const [contentGenerationRunning, setContentGenerationRunning] = useState<boolean>(false);
-    const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedContentSuccess | GeneratedContentWarnings | null>(null);
+    const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>(null);
     const [contentCategory, setContentCategory] = useState<number>(1);
 
     return (
@@ -31,24 +37,18 @@ export default function GenerateScreen() {
 
                 <div>
                     <div>
-                        {/*contentCategory === 1 ? (
-                            <div>Literature</div>
-                        )
-                        :(
-                            <div>Art</div>
-                        )
-                    */}
+
                         <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
 
                             {/* Tab to switch between literary and art content generators */}
                             <div className={"flex justify-center items-center gap-5 f-full"}>
-                                    <div className={`${contentCategory === 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
+                                <div className={`${contentCategory === 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
                                     onClick={() => setContentCategory(1)}>Literature</div>
-                                    <div className={`${contentCategory !== 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
+                                <div className={`${contentCategory !== 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
                                     onClick={() => setContentCategory(2)}>Art</div>
                             </div><br />
 
-                            <div className={"grid grid-cols-2 gap-20 max-[850px]:grid-cols-1"}>
+                            <div className={"grid grid-cols-2 gap-20 max-[900px]:grid-cols-1"}>
 
                                 {/* User Prompt Form */}
                                 <div className={"w-full"}>
@@ -60,8 +60,8 @@ export default function GenerateScreen() {
                                         setContentGenerationRunning={setContentGenerationRunning}
                                         generatedContent={generatedContent}
                                         setGeneratedContent={setGeneratedContent}
+                                        contentCategory={contentCategory}
                                     />
-
 
                                 </div>
 
@@ -74,6 +74,7 @@ export default function GenerateScreen() {
                                         setContentGenerationRunning={setContentGenerationRunning}
                                         generatedContent={generatedContent}
                                         setGeneratedContent={setGeneratedContent}
+                                        contentCategory={contentCategory}
                                     />
                                 </div>
                             </div>

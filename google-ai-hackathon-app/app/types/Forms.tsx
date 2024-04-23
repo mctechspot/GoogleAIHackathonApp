@@ -1,15 +1,16 @@
 import { SetStateAction } from "react";
-import { GeneratedContentError, GeneratedContentSuccess, GeneratedContentWarnings } from "@/app/types/Response";
+import { 
+    GeneratedContentError, 
+    GeneratedLiteratureContentSuccess, 
+    GeneratedArtContentSuccess, 
+    GeneratedContentWarnings 
+} from "@/app/types/Response";
 
 export type UserFormProps = {
     prompt: string;
-    image?: any;
+    image?: File | null;
     content_type: string;
-}
-
-export type UserFormType = {
-    userPrompt: UserFormProps;
-    setUserPrompt: React.Dispatch<SetStateAction<UserFormProps>>;
+    orientation: string;
 }
 
 export type ContentDropdownProps = {
@@ -17,11 +18,18 @@ export type ContentDropdownProps = {
     value: string;
 }
 
+export type UserFormType = {
+    userPrompt: UserFormProps;
+    setUserPrompt: React.Dispatch<SetStateAction<UserFormProps>>;
+    contentCategory: number;
+}
+
 export type CompleteUserFormType = {
     userPrompt: UserFormProps;
     setUserPrompt: React.Dispatch<SetStateAction<UserFormProps>>;
     contentGenerationRunning:boolean;
     setContentGenerationRunning: React.Dispatch<SetStateAction<boolean>>;
-    generatedContent: GeneratedContentError |GeneratedContentSuccess | GeneratedContentWarnings | null;
-    setGeneratedContent: React.Dispatch<SetStateAction<GeneratedContentError |GeneratedContentSuccess | GeneratedContentWarnings | null>>;
+    generatedContent: GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null;
+    setGeneratedContent: React.Dispatch<SetStateAction<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>>;
+    contentCategory: number;
 }

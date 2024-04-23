@@ -1,14 +1,21 @@
 "use client"
 import { SetStateAction, useEffect, useState } from "react"
 import Image from "next/image";
-import Link from "next/link";
 import ContentTypeDropdown from "@/app/components/Dropdown/ContentTypeDropdown";
-import { ContentDropdownProps, UserFormProps, UserFormType, CompleteUserFormType } from "@/app/types/Forms"
-import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
+import { CompleteUserFormType } from "@/app/types/Forms"
+import {
+    TbRectangle,
+    TbRectangleFilled,
+    TbRectangleVertical, 
+    TbRectangleVerticalFilled,
+    TbSquare,
+    TbSquareFilled
+ } from "react-icons/tb";
+
 
 export default function UserPromptForm(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
-        generatedContent, setGeneratedContent }: CompleteUserFormType) {
+        generatedContent, setGeneratedContent, contentCategory }: CompleteUserFormType) {
 
     const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("");
 
@@ -24,25 +31,42 @@ export default function UserPromptForm(
         }
     }
 
+    // Function to content generation api endpoint call
     const handleUserPromptSubmit = async (event: any): Promise<void> => {
         event.preventDefault();
         setGeneratedContent(null);
         setContentGenerationRunning(false);
 
+        // Set payload and appropriate endpoint based on content category and user input prompts
         let payload;
         let apiEndpoint: string = "";
 
-        if (userPrompt.image) {
-            // Handle case where image is included in prompt
-            payload = new FormData(event.target);
-            payload.append("image", userPrompt.image);
-            payload.append("content_type", userPrompt.content_type);
-            payload.append("prompt", userPrompt.prompt);
-            apiEndpoint = "/api/generate-text-from-prompt-and-image";
-        } else {
-            // Handle case where no image is included in prompt
-            payload = JSON.stringify(userPrompt);
-            apiEndpoint = "/api/generate-text-from-prompt";
+
+        // Literature Content
+        if (contentCategory === 1) {
+            if (userPrompt.image) {
+                // Handle case where image is included in prompt
+                payload = new FormData(event.target);
+                payload.append("image", userPrompt.image);
+                payload.append("content_type", userPrompt.content_type);
+                payload.append("prompt", userPrompt.prompt);
+                apiEndpoint = "/api/generate-text-from-prompt-and-image";
+            } else {
+                // Handle case where no image is included in prompt
+                payload = payload = JSON.stringify({
+                    "prompt": userPrompt.prompt,
+                    "content_type": userPrompt.content_type,
+                });
+                apiEndpoint = "/api/generate-text-from-prompt";
+            }
+        } // Art Content
+        else {
+            payload = JSON.stringify({
+                "prompt": userPrompt.prompt,
+                "style": userPrompt.content_type,
+                "orientation": userPrompt.orientation
+            });
+            apiEndpoint = "/api/generate-image-from-text";
         }
 
         setContentGenerationRunning(true);
@@ -52,9 +76,16 @@ export default function UserPromptForm(
         });
 
         const contentJson = await contentRes.json();
-        console.log(contentJson);
+        if("response" in contentJson){
+            if(contentCategory === 1){
+                setGeneratedContent({"response_text": contentJson.response});
+            }else{
+                setGeneratedContent({"response_images": contentJson.response});
+            }
+        }else{
+            setGeneratedContent(contentJson);
+        }
         setContentGenerationRunning(false);
-        setGeneratedContent(contentJson);
     }
 
     return (
@@ -63,11 +94,42 @@ export default function UserPromptForm(
 
                 <p className={"text-center text-green-text font-black"}>Enter a prompt to get your content.</p><br />
 
-                {/* Content Type Generator */}
-                <ContentTypeDropdown
-                    userPrompt={userPrompt}
-                    setUserPrompt={setUserPrompt}
-                /><br />
+                <div className={"grid grid-cols-2 gap-5 max-[900px]:grid-cols-1"}>
+                    {/* Content Type Generator */}
+                    <ContentTypeDropdown
+                        userPrompt={userPrompt}
+                        setUserPrompt={setUserPrompt}
+                        contentCategory={contentCategory}
+                    />
+                    {contentCategory !== 1 ? (
+                        <>
+                            <div className={"flex items-center gap-2"}>
+                                <p>Orientation: </p>
+                                <div className={"flex items-center gap-2"}>
+                                    <div className={`text-2xl cursor-pointer \
+                                    ${userPrompt.orientation === "1" ? ("text-green-text font-black") : ("")}`}
+                                    onClick={() => setUserPrompt({ ...userPrompt, orientation: "1" })}>
+                                        {userPrompt.orientation === "1" ? (<TbSquareFilled />): (<TbSquare />)}
+                                    </div>
+                                    <div className={`text-2xl cursor-pointer \
+                                    ${userPrompt.orientation === "2" ? ("text-green-text font-black") : ("")}`}
+                                    onClick={() => setUserPrompt({ ...userPrompt, orientation: "2" })}>
+                                        {userPrompt.orientation === "2" ? (<TbRectangleVerticalFilled />): (<TbRectangleVertical/>)}
+                                    </div>
+
+                                    {/* Landscape Orientation */}
+                                    <div className={`text-2xl cursor-pointer \
+                                    ${userPrompt.orientation === "3" ? ("text-green-text font-black") : ("")}`}
+                                    onClick={() => setUserPrompt({ ...userPrompt, orientation: "3" })}>
+                                        {userPrompt.orientation === "3" ? (<TbRectangleFilled />): (<TbRectangle />)}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </>
+                    ) : ("")}
+                </div>
+                <br />
 
                 <textarea
                     id={"prompt-text"} name={"prompt-text"}
@@ -79,38 +141,49 @@ export default function UserPromptForm(
                 >
                 </textarea><br /><br />
 
-                <div className={"border-2 border-solid border-dashed border-green-standard rounded p-5"}>
-                    <p className={"text-center text-green-text font-black"}>Add an image for context (optional).</p><br />
 
-                    <input type={"file"} id={"prompt-image"} name={"prompt-image"}
-                        accept={"image/jpeg, image/jpg, image/png"}
-                        onChange={(event) => {
-                            {
-                                setUserPrompt({ ...userPrompt, image: event.target.files?.[0] });
-                                previewImage(event, setImagePreviewSrc);
-                            }
-                        }} /><br /><br />
+                {contentCategory === 1 ? (
+                    <>
+                        <div className={"border-2 border-solid border-dashed border-green-standard rounded p-5"}>
+                            <p className={"text-center text-green-text font-black"}>Add an image for context (optional).</p><br />
 
-                    {/* Image  Preview*/}
-                    {imagePreviewSrc ? (
-                        <>
-                            <Image
-                                src={imagePreviewSrc}
-                                alt={'Image Preview'}
-                                height={"200"}
-                                width={"200"}
-                                className={`block m-auto h-auto w-[200px]`}
-                                style={{ display: imagePreviewSrc === "" ? "none" : "block" }}
-                            />
-                        </>
-                    ) : ("")}
-                </div><br />
+                            {/* Image  Input */}
+                            <input type={"file"} id={"prompt-image"} name={"prompt-image"}
+                                accept={"image/jpeg, image/jpg, image/png"}
+                                onChange={(event) => {
+                                    {
+                                        setUserPrompt({ ...userPrompt, image: event.target.files?.[0] });
+                                        previewImage(event, setImagePreviewSrc);
+                                    }
+                                }} /><br /><br />
+
+                            {/* Image  Preview*/}
+                            {imagePreviewSrc ? (
+                                <>
+                                    <Image
+                                        src={imagePreviewSrc}
+                                        alt={'Image Preview'}
+                                        height={"200"}
+                                        width={"200"}
+                                        className={`block m-auto h-auto w-[200px]`}
+                                        style={{ display: imagePreviewSrc === "" ? "none" : "block" }}
+                                    />
+                                </>
+                            ) : ("")}
+
+
+
+
+                        </div><br />
+                    </>
+
+                ) : ("")}
 
 
 
                 <div className={"flex gap-2 w-full"}>
                     <button type={"submit"} className={"bg-green-standard rounded p-2 w-full disabled:bg-green-disabled"}
-                    disabled={contentGenerationRunning}>Generate</button>
+                        disabled={contentGenerationRunning}>Generate</button>
                     <button type={"button"} className={"bg-green-standard rounded p-2 w-full"}
                         onClick={() => {
                             setUserPrompt({ ...userPrompt, prompt: "", image: null });

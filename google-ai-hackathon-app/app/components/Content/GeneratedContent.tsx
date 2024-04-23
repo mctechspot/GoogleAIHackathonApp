@@ -1,15 +1,16 @@
 "use client"
+import ReactDOMServer from 'react-dom/server';
 import { RefObject, useEffect, useRef, useState } from "react"
 import { CompleteUserFormType } from "@/app/types/Forms";
 import { CgSpinner } from "react-icons/cg";
-import { FaCopy, FaRegCopy, FaClipboard, FaClipboardCheck, FaRegClipboard } from "react-icons/fa";
+import { FaClipboardCheck, FaRegClipboard } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 import { MdError } from "react-icons/md";
-
+import GeneratedArtGrid from "@/app/components/Content/GeneratedArtGrid"
 
 export default function GeneratedContent(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
-        generatedContent, setGeneratedContent }: CompleteUserFormType) {
+        generatedContent, setGeneratedContent, contentCategory }: CompleteUserFormType) {
 
     const generatedContentContainer: RefObject<HTMLDivElement> | null = useRef(null);
     const generatedContentRef: RefObject<HTMLDivElement> | null = useRef(null);
@@ -17,9 +18,11 @@ export default function GeneratedContent(
 
     // Function to copy generated content to clipboard
     const copyContent = (): void => {
-        if (generatedContent && "response" in generatedContent) {
+        if (generatedContent && "response_text" in generatedContent) {
             setContentCopied(true);
-            navigator.clipboard.writeText(generatedContent.response);
+            if ("response_text" in generatedContent) {
+                navigator.clipboard.writeText(generatedContent.response_text);
+            }
 
             // Change copy state for 2 seconds
             setTimeout(() => {
@@ -30,26 +33,40 @@ export default function GeneratedContent(
 
     // Function to display generated content
     const displayGeneratedContent = (): void => {
-        if (generatedContent && "response" in generatedContent) {
+        if (generatedContent && ("response_text" in generatedContent || "response_images" in generatedContent)) {
             const generatedContentElement = generatedContentRef?.current;
             if (generatedContentElement) {
 
-                // Format content for html
+                // Display content for literature
+                if (contentCategory === 1) {
+                    if ("response_text" in generatedContent) {
+                        // Format content for html
 
-                // Replace "\n" line breaks with <br> tags
-                let formattedContent = generatedContent.response.replaceAll(/\n/g, "<br>");
+                        // Replace "\n" line breaks with <br> tags
+                        let formattedContent = generatedContent.response_text.replaceAll(/\n/g, "<br>");
 
-                // Replace ** content ** to reflect <b>content</b> format
-                formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-                console.log(formattedContent);
-                generatedContentElement.innerHTML = formattedContent;
+                        // Replace ** content ** to reflect <b>content</b> format
+                        formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                        generatedContentElement.innerHTML = formattedContent;
+                    }
+
+                } else { // Display content for art
+                    if ("response_images" in generatedContent) {
+                        const jsxContent = <GeneratedArtGrid
+                            response_images={generatedContent.response_images}
+                            orientation={userPrompt.orientation} />;
+                        const htmlString = ReactDOMServer.renderToString(jsxContent);
+                        generatedContentElement.innerHTML = htmlString;
+                    }
+
+                }
             };
         }
     };
 
     // Display content once it is successfully generated
     useEffect(() => {
-        if (generatedContent && "response" in generatedContent) {
+        if (generatedContent && ("response_text" in generatedContent || "response_images" in generatedContent)) {
             displayGeneratedContent();
         }
     }, [generatedContent]);
@@ -91,26 +108,31 @@ export default function GeneratedContent(
                     <>
 
                         {/* Display successful content response */}
-                        {"response" in generatedContent ? (
+                        {"response_text" in generatedContent || "response_images" in generatedContent ? (
                             <>
                                 <div className={"m-2"} >
                                     <p className={"text-center text-green-text font-black"}>Here&apos;s your content!</p><br />
-                                    <div className={"bg-green-pale rounded p-5"}>
-                                        <div className={"flex justify-end w-full cursor-pointer"}>
-                                            {contentCopied ? (
-                                                <>
-                                                    <div className={"flex items-center gap-2"}>
-                                                        <p className={"text-right text-sm text-green-text font-black"}>Copied</p>
-                                                        <FaClipboardCheck className={"text-right text-xl text-green-text font-black"} />
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <FaRegClipboard className={"text-right text-xl text-green-text font-black"}
-                                                        onClick={() => copyContent()} />
-                                                </>
-                                            )}
-                                        </div><br />
+                                    <div>
+                                        {contentCategory === 1 ? (
+                                            <>
+                                                <div className={"flex justify-end w-full cursor-pointer"}>
+                                                    {contentCopied ? (
+                                                        <>
+                                                            <div className={"flex items-center gap-2"}>
+                                                                <p className={"text-right text-sm text-green-text font-black"}>Copied</p>
+                                                                <FaClipboardCheck className={"text-right text-xl text-green-text font-black"} />
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <FaRegClipboard className={"text-right text-xl text-green-text font-black"}
+                                                                onClick={() => copyContent()} />
+                                                        </>
+                                                    )}
+                                                </div><br />
+                                            </>
+                                        ) : ("")}
+
                                         <div ref={generatedContentRef}></div>
                                     </div>
                                 </div>
