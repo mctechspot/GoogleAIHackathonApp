@@ -40,13 +40,17 @@ export default function GeneratedContent(
                 // Display content for literature
                 if (contentCategory === 1) {
                     if ("response_text" in generatedContent) {
-                        // Format content for html
 
-                        // Replace "\n" line breaks with <br> tags
-                        let formattedContent = generatedContent.response_text.replaceAll(/\n/g, "<br>");
+                        let formattedContent: string = `<p className={"text-center"}>Erm... we are having trouble generating an image for this prompt. Why don't you try another one?</p>`;
+                        if (generatedContent.response_text.trim() !== "") {
+                            // Format content for html
+                            // Replace "\n" line breaks with <br> tags
+                            formattedContent = generatedContent.response_text.replaceAll(/\n/g, "<br>");
 
-                        // Replace ** content ** to reflect <b>content</b> format
-                        formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                            // Replace ** content ** to reflect <b>content</b> format
+                            formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                        }
+
                         generatedContentElement.innerHTML = formattedContent;
                     }
 
@@ -111,7 +115,16 @@ export default function GeneratedContent(
                         {"response_text" in generatedContent || "response_images" in generatedContent ? (
                             <>
                                 <div className={"m-2"} >
-                                    <p className={"text-center text-green-text font-black"}>Here&apos;s your content!</p><br />
+                                    {"response_text" in generatedContent && generatedContent.response_text === "" ||
+                                        "response_images" in generatedContent && generatedContent.response_images.length === 0 ? (
+                                        <>
+                                            <p className={"text-center text-green-text font-black"}>Well... this is awkward.</p><br />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p className={"text-center text-green-text font-black"}>Here&apos;s your content!</p><br />
+                                        </>
+                                    )}
                                     <div>
                                         {contentCategory === 1 ? (
                                             <>
