@@ -16,10 +16,9 @@ export default function GenerateScreen() {
         "image": null,
         "content_type": "1"
     });
-
     const [contentGenerationRunning, setContentGenerationRunning] = useState<boolean>(false);
-
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedContentSuccess | GeneratedContentWarnings | null>(null);
+    const [contentCategory, setContentCategory] = useState<number>(1);
 
     return (
         <>
@@ -32,7 +31,23 @@ export default function GenerateScreen() {
 
                 <div>
                     <div>
+                        {/*contentCategory === 1 ? (
+                            <div>Literature</div>
+                        )
+                        :(
+                            <div>Art</div>
+                        )
+                    */}
                         <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
+
+                            {/* Tab to switch between literary and art content generators */}
+                            <div className={"flex justify-center items-center gap-5 f-full"}>
+                                    <div className={`${contentCategory === 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
+                                    onClick={() => setContentCategory(1)}>Literature</div>
+                                    <div className={`${contentCategory !== 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
+                                    onClick={() => setContentCategory(2)}>Art</div>
+                            </div><br />
+
                             <div className={"grid grid-cols-2 gap-20 max-[850px]:grid-cols-1"}>
 
                                 {/* User Prompt Form */}
