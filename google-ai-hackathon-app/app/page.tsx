@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Logo from "@/public/assets/logo-dark.png";
 import BannerGif from "@/public/assets/banner-gif.gif";
 import Link from "next/link";
 import Footer from "@/app/components/Navigation/Footer";

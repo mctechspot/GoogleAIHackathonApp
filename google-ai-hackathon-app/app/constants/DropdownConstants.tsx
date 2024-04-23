@@ -12,6 +12,10 @@ export const literatureContentTypes: ContentDropdownProps[]  = [
     },
     {
         "key": "3",
+        "value": "Play"
+    },
+    {
+        "key": "4",
         "value": "Song"
     }
 ];

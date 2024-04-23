@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Logo from "@/public/assets/logo-dark.png";
+import Logo from "@/public/assets/logo.png";
 import Link from "next/link";
 import Footer from "@/app/components/Navigation/Footer";
 
@@ -25,11 +25,11 @@ export default function About() {
 
                             <p className={"text-green-text text-lg font-black"}>About Jenna</p><br />
 
-                            <p>Jenna is a play on the term Generative Artificial Intelligence or GenAI for short.</p><br />
+                            <p>Jenna is a play on the term GenAI which stands for Generative Artificial Intelligence.</p><br />
 
                             <p>
                                 The tool leverages Google Vertex AI and Google Gemini to generate
-                                stories, poems and songs for text and image prompts.
+                                stories, poems, plays, songs and art images for your customised prompts.
                             </p><br />
 
                             <p>Get creative!</p>

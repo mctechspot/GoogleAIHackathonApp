@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/assets/logo-dark.png";
+import Logo from "@/public/assets/logo.png";
 
 export default function Footer() {
 
@@ -14,9 +14,9 @@ export default function Footer() {
                     <Image
                         src={Logo}
                         alt={"Logo"}
-                        height={"35"}
-                        width={"40"}
-                        className={"block m-auto mb-2 h-auto w-[60px]"}
+                        height={"50"}
+                        width={"100"}
+                        className={"block m-auto mb-2 h-auto w-[100px]"}
                     />
                 </Link>
             </div>
