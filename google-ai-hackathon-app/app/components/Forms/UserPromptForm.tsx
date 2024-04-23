@@ -104,7 +104,7 @@ export default function UserPromptForm(
                     {contentCategory !== 1 ? (
                         <>
                             <div className={"flex items-center gap-2"}>
-                                <p>Orientation: </p>
+                                <p>Orientation </p>
                                 <div className={"flex items-center gap-2"}>
                                     <div className={`text-2xl cursor-pointer \
                                     ${userPrompt.orientation === "1" ? ("text-green-text font-black") : ("")}`}
