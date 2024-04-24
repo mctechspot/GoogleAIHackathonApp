@@ -1,6 +1,7 @@
 "use client"
 import ReactDOMServer from 'react-dom/server';
-import { RefObject, useEffect, useRef, useState } from "react"
+import { RefObject, useContext, useEffect, useRef, useState } from "react"
+import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import { CompleteUserFormType } from "@/app/types/Forms";
 import { CgSpinner } from "react-icons/cg";
 import { FaClipboardCheck, FaRegClipboard } from "react-icons/fa";
@@ -12,6 +13,7 @@ export default function GeneratedContent(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
         generatedContent, setGeneratedContent, contentCategory }: CompleteUserFormType) {
 
+    const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const generatedContentContainer: RefObject<HTMLDivElement> | null = useRef(null);
     const generatedContentRef: RefObject<HTMLDivElement> | null = useRef(null);
     const [contentCopied, setContentCopied] = useState<boolean>(false);
@@ -146,7 +148,8 @@ export default function GeneratedContent(
                                             </>
                                         ) : ("")}
 
-                                        <div ref={generatedContentRef}></div>
+                                        <div ref={generatedContentRef}
+                                            className={`${lightTheme ? ("text-black") : ("text-white")}`}></div>
                                     </div>
                                 </div>
                             </>
@@ -159,7 +162,7 @@ export default function GeneratedContent(
                                     <div className={"flex justify-center text-center text-[50px] text-yellow-warning font-black"}>
                                         <IoIosWarning />
                                     </div><br />
-                                    <p className={"text-center text-yellow-warning font-black"}>{generatedContent.warnings.join(" ")}</p><br />
+                                    <p className={`text-center text-yellow-warning font-black`}>{generatedContent.warnings.join(" ")}</p><br />
                                 </div>
                             </>
                         ) : ("")}
@@ -169,10 +172,10 @@ export default function GeneratedContent(
                         {"error" in generatedContent ? (
                             <>
                                 <div className={"m-2"}>
-                                    <div className={"flex justify-center text-center text-[50px] text-red-error font-black"}>
+                                    <div className={`flex justify-center text-center text-[50px] ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>
                                         <MdError />
                                     </div><br />
-                                    <p className={"text-center text-red-error font-black"}>Error generating content. Try again.</p><br />
+                                    <p className={`text-center ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>Error generating content. Try again.</p><br />
                                 </div>
                             </>
                         ) : ("")}

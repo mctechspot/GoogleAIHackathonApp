@@ -1,9 +1,16 @@
+"use client"
+import { useContext } from "react"
+import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import Image from "next/image";
-import BannerGif from "@/public/assets/banner-gif.gif";
+import BannerLight from "@/public/assets/banner.gif";
+import BannerDark from "@/public/assets/banner-dark.gif";
 import Link from "next/link";
 import Footer from "@/app/components/Navigation/Footer";
 
 export default function Home() {
+  
+  const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
+
   return (
     <>
       <div className={`h-screen flex flex-col justify-between`}>
@@ -12,7 +19,7 @@ export default function Home() {
           <div>
             <Link href={"/"}>
               <Image
-                src={BannerGif}
+                src={lightTheme ? BannerLight : BannerDark}
                 alt={"Home Banner"}
                 height={"106"}
                 width={"250"}
@@ -20,12 +27,8 @@ export default function Home() {
               />
             </Link>
 
-            {/*<p className={`text-center my-[50px]`}>
-              intelligent literary content generator
-            </p>*/}
-
             <Link href={"/generate"}
-              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center rounded-lg"}>
+              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg"}>
               Try
             </Link>
           </div>

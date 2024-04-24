@@ -1,12 +1,13 @@
 "use client"
-import { RefObject, useEffect, useRef, useState } from "react"
+import { RefObject, useContext, useEffect, useRef, useState } from "react"
+import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import { ContentDropdownProps, UserFormProps, UserFormType } from "@/app/types/Forms"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { literatureContentTypes, artContentTypes, artOrientations } from "@/app/constants/DropdownConstants"
 
 export default function ContentTypeDropdown({ userPrompt, setUserPrompt, contentCategory }: UserFormType) {
 
-
+    const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const [openDropdown, setOpenDropdown] = useState<boolean>(false);
     const dropdownRef: RefObject<HTMLDivElement> | null = useRef(null);
     const [dropdownData, setDropdownData] = useState<any[]>(literatureContentTypes);
@@ -27,9 +28,9 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt, content
     };
 
     useEffect(() => {
-        if(contentCategory === 1){
+        if (contentCategory === 1) {
             setDropdownData(literatureContentTypes);
-        }else{
+        } else {
             setDropdownData(artContentTypes);
         }
     }, [contentCategory]);
@@ -38,14 +39,14 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt, content
         <>
             <div className={"w-fit relative"} ref={dropdownRef}>
                 {/* Dropdown Header */}
-                <div className={"border border-green-standard rounded p-2 min-w-[119.37px] cursor-pointer"}
+                <div className={`border border-green-standard rounded p-2 min-w-[119.37px] cursor-pointer`}
                     onClick={(event) => {
                         event.stopPropagation();
                         setOpenDropdown(!openDropdown);
                     }}>
                     <div>
                         <div className={"flex items-center justify-center gap-2"}>
-                            <div>
+                            <div className={`${lightTheme ? ("text-black") : ("text-white")}`}>
                                 {dropdownData.find((dropdownDataEntry: ContentDropdownProps, index: number) => dropdownDataEntry.key === userPrompt.content_type).value}
                             </div>
                             <div className={"text-green-text"}>
@@ -58,13 +59,14 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt, content
                 {openDropdown ? (
                     <>
                         {/* Dropdown Options */}
-                        <div className={"absolute bg-white border border-green-standard rounded mt-2"}>
+                        <div className={`absolute ${lightTheme ? ("bg-white") : ("bg-green-dark")} border border-green-standard rounded mt-2`}>
                             {dropdownData.map((dropdownDataEntry: any, index: number) => {
                                 return (
                                     <>
                                         <div
-                                            className={`${userPrompt.content_type === dropdownDataEntry.key ? "bg-green-standard" : ""}
-                                    hover:bg-green-standard w-full py-2 px-10 w-full cursor-pointer`}
+                                            key={`dropdown-option-${index + 1}`}
+                                            className={`${userPrompt.content_type === dropdownDataEntry.key ? (`bg-green-standard`) : (lightTheme ? ("text-black") : ("text-white"))}
+                                     hover:bg-green-standard hover:text-black w-full py-2 px-10 w-full cursor-pointer`}
                                             onClick={() => {
                                                 setUserPrompt({ ...userPrompt, content_type: dropdownDataEntry.key });
                                                 setOpenDropdown(false);
@@ -77,7 +79,6 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt, content
                         </div>
                     </>
                 ) : ("")}
-
             </div>
         </>
     );

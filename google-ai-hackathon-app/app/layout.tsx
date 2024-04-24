@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Zen_Kaku_Gothic_Antique } from "next/font/google";
 import "./globals.css";
-
+import MainLayout from "@/app/components/Layouts/MainLayout";
 const inter = Inter({ subsets: ["latin"] });
 
 const zenKakuGothicAntique = Zen_Kaku_Gothic_Antique({
@@ -14,7 +14,7 @@ const zenKakuGothicAntique = Zen_Kaku_Gothic_Antique({
 
 export const metadata: Metadata = {
   title: "Jenna",
-  description: "Intelligent Literary Content Generator",
+  description: "Intelligent Content Generator",
 };
 
 export default function RootLayout({
@@ -23,8 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} ${zenKakuGothicAntique.className}`}>{children}</body>
+    <html lang="en" className={"dark"}>
+      <body className={`${inter.className} ${zenKakuGothicAntique.className}`}>
+        <MainLayout>
+            {children}
+        </MainLayout>
+      </body>
     </html>
   );
 }

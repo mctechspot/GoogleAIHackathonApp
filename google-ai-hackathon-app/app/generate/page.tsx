@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/app/components/Navigation/Header";
@@ -7,15 +7,16 @@ import Footer from "@/app/components/Navigation/Footer";
 import UserPromptForm from "@/app/components/Forms/UserPromptForm";
 import GeneratedContent from "@/app/components/Content/GeneratedContent";
 import { UserFormProps, UserFormType } from "@/app/types/Forms";
-import { 
-    GeneratedContentError, 
-    GeneratedLiteratureContentSuccess, 
-    GeneratedArtContentSuccess, 
-    GeneratedContentWarnings 
+import {
+    GeneratedContentError,
+    GeneratedLiteratureContentSuccess,
+    GeneratedArtContentSuccess,
+    GeneratedContentWarnings
 } from "@/app/types/Response";
+import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 
 export default function GenerateScreen() {
-
+    const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const [userPrompt, setUserPrompt] = useState<UserFormProps>({
         "prompt": "",
         "image": null,
@@ -41,10 +42,10 @@ export default function GenerateScreen() {
                         <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
 
                             {/* Tab to switch between literary and art content generators */}
-                            <div className={"flex justify-center items-center gap-5 f-full"}>
-                                <div className={`${contentCategory === 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
+                            <div className={`flex justify-center items-center gap-5 f-full`}>
+                                <div className={`${contentCategory === 1 ? (`bg-green-standard text-black`) : (lightTheme ? ("text-black"):("text-white"))} font-black p-2 rounded cursor-pointer`}
                                     onClick={() => setContentCategory(1)}>Literature</div>
-                                <div className={`${contentCategory !== 1 ? ("bg-green-standard") : ("")} font-black p-2 rounded cursor-pointer`}
+                                <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-black"):("text-white"))} font-black p-2 rounded cursor-pointer`}
                                     onClick={() => setContentCategory(2)}>Art</div>
                             </div><br />
 

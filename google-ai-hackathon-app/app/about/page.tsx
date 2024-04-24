@@ -1,9 +1,14 @@
+"use client"
+import { useContext } from "react"
+import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import Image from "next/image";
-import Logo from "@/public/assets/logo.png";
+import LogoLight from "@/public/assets/logo.png";
+import LogoDark from "@/public/assets/logo-dark.png";
 import Link from "next/link";
 import Footer from "@/app/components/Navigation/Footer";
 
 export default function About() {
+    const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     return (
         <>
             <div className={`h-screen flex flex-col justify-between`}>
@@ -12,7 +17,7 @@ export default function About() {
                     <div className={"mx-[50px]"}>
                         <Link href={"/"}>
                             <Image
-                                src={Logo}
+                                src={lightTheme ? LogoLight : LogoDark}
                                 alt={"Logo"}
                                 height={"106"}
                                 width={"250"}
@@ -20,8 +25,7 @@ export default function About() {
                             />
                         </Link>
 
-
-                        <div className={`text-center my-[50px]`}>
+                        <div className={`${lightTheme ? ("text-black"): ("text-white")} text-center my-[50px]`}>
 
                             <p className={"text-green-text text-lg font-black"}>About Jenna</p><br />
 
@@ -36,7 +40,7 @@ export default function About() {
                         </div>
 
                         <Link href={"/generate"}
-                            className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center rounded-lg"}>
+                            className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg"}>
                             Try
                         </Link>
                     </div>
