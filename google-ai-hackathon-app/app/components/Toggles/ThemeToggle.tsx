@@ -16,14 +16,14 @@ export default function ThemeToggle() {
 
     return (
         <>
-            <div className={`absolute flex gap-2 justify-end w-full items-center p-5 text-xl \
+            <div className={`absolute right-0 flex gap-2 justify-end items-center p-5 text-xl z-10 \
             ${lightTheme ? ("text-black") : ("text-green-pale")}`}>
                 <div className={"cursor-pointer"}
-                onClick={() => setLightTheme(true)}>
+                    onClick={() => setLightTheme(true)}>
                     {lightTheme ? (<MdLightMode />) : (<MdOutlineLightMode />)}
                 </div>
                 <div className={"cursor-pointer"}
-                onClick={() => setLightTheme(false)}>
+                    onClick={() => setLightTheme(false)}>
                     {!lightTheme ? (<MdDarkMode />) : (<MdOutlineDarkMode />)}
                 </div>
             </div>

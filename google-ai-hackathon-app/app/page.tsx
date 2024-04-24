@@ -4,6 +4,8 @@ import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import Image from "next/image";
 import BannerLight from "@/public/assets/banner.gif";
 import BannerDark from "@/public/assets/banner-dark.gif";
+import { useSession, signIn, signOut } from "next-auth/react"
+import { FcGoogle } from "react-icons/fc";
 
 import Link from "next/link";
 import Footer from "@/app/components/Navigation/Footer";
@@ -28,9 +30,18 @@ export default function Home() {
               />
             </Link>
 
+            <button
+              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg"}
+              onClick={() => signIn()}>
+              <div className={"flex items-center gap-2"}>
+                <FcGoogle />
+                <span>Sign In with Google</span>
+              </div>
+            </button><br />
+
             <Link href={"/generate"}
               className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg"}>
-              Try
+              Try without Account
             </Link>
           </div>
 

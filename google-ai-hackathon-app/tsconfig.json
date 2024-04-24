@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Dropdown/ContentTypeDropdowntsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Dropdown/ContentTypeDropdowntsx", "app/api/auth/[...next].js", "app/api/auth/[...nextauth].js"],
   "exclude": ["node_modules"]
 }

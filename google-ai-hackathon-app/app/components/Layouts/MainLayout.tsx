@@ -1,8 +1,9 @@
 "use client"
 import contextProvider, { createContext, useContext, useEffect, useState } from "react"
 import ThemeToggle from "@/app/components/Toggles/ThemeToggle"
-
+import UserSideBar from "@/app/components/User/UserSideBar"
 export const ThemeContext = createContext({});
+import { SessionProvider } from "next-auth/react"
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
 
@@ -26,9 +27,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
     // Function to update theme in local storage when lightTheme state changes
     const updateThemeInLocalStorage = () => {
-        if(lightTheme){
+        if (lightTheme) {
             localStorage.setItem("theme", "light");
-        }else{
+        } else {
             localStorage.setItem("theme", "dark");
         }
     }
@@ -39,12 +40,14 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
     return (
         <>
-            <ThemeContext.Provider value={{ lightTheme, setLightTheme }}>
-                <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")}`}>
-                    <ThemeToggle />
-                    {children}
-                </div>
-            </ThemeContext.Provider>
+            <SessionProvider>
+                <ThemeContext.Provider value={{ lightTheme, setLightTheme }}>
+                    <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")}`}>
+                        <ThemeToggle />
+                        {children}
+                    </div>
+                </ThemeContext.Provider>
+            </SessionProvider>
         </>
     );
 }

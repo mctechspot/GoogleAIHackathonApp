@@ -4,7 +4,6 @@ import { Zen_Kaku_Gothic_Antique } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/app/components/Layouts/MainLayout";
 const inter = Inter({ subsets: ["latin"] });
-
 const zenKakuGothicAntique = Zen_Kaku_Gothic_Antique({
   weight: ['300', '400', '500', '700', '900'],
   variable: '--font-zen-kaku-gothic-antique',
@@ -25,9 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={"dark"}>
       <body className={`${inter.className} ${zenKakuGothicAntique.className}`}>
-        <MainLayout>
+          <MainLayout>
             {children}
-        </MainLayout>
+          </MainLayout>
       </body>
     </html>
   );
