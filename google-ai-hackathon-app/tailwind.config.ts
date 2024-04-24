@@ -20,7 +20,7 @@ const config: Config = {
           "pale": "#F2FCF8",
           "disabled": "#BBC9C4",
           "text": "#3FA279",
-          "dark": "#000F09"
+          "dark": "#2B4038"
         },
         "grey": {
           "pale": "#ADADAD"
