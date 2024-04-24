@@ -4,11 +4,12 @@ import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import Image from "next/image";
 import BannerLight from "@/public/assets/banner.gif";
 import BannerDark from "@/public/assets/banner-dark.gif";
+
 import Link from "next/link";
 import Footer from "@/app/components/Navigation/Footer";
 
 export default function Home() {
-  
+
   const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
 
   return (
