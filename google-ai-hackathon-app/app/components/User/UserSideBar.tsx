@@ -1,5 +1,6 @@
 "use client"
 import { useContext, useEffect, useState } from "react"
+import { useRouter } from 'next/navigation'
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { ThemeContext } from "@/app/components/Layouts/MainLayout";
 import Image from "next/image";
@@ -9,6 +10,7 @@ import { IoClose } from "react-icons/io5";
 
 
 export default function UserSideBar() {
+    const router = useRouter();
     const { data: session, status } = useSession();
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const [openUserSideBar, setOpenUserSideBar] = useState<boolean>(false);
@@ -36,14 +38,16 @@ export default function UserSideBar() {
                                             className={"block m-auto mb-2 h-[40px] w-[40px] rounded-full"}
                                         /><br />
 
-                                        <div className={`${lightTheme ? ("text-black") : ("text-green-standard")}`}>
+                                        <div className={`${lightTheme ? ("text-black") : ("text-white")}`}>
                                             <p className={"text-center"}>{session.user?.name}</p><br />
                                             <p className={"text-center"}>{session.user?.email}</p><br />
                                         </div>
 
                                         <button className={`block bg-green-standard p-2 w-fit m-auto \ 
                                 text-center font-black rounded-lg cursor-pointer`}
-                                            onClick={() => signOut()}>
+                                            onClick={() => {
+                                                signOut();
+                                            }}>
                                             Sign Out
                                         </button>
                                     </div>
