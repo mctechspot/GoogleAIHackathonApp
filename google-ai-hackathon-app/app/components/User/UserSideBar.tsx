@@ -43,7 +43,7 @@ export default function UserSideBar() {
                                         <p className={"text-center"}>{session.user?.email}</p><br />
                                     </div>
 
-                                    <button className={`block bg-green-standard p-2 w-fit m-auto \ 
+                                    <button className={`block bg-green-standard text-green-dark p-2 w-fit m-auto \ 
                                 text-center font-black rounded-lg cursor-pointer`}
                                         onClick={() => {
                                             signOut();
@@ -61,7 +61,7 @@ export default function UserSideBar() {
                                         }}>
                                         <div className={"flex items-center gap-2"}>
                                             <FcGoogle />
-                                            <span>Sign In with Google</span>
+                                            <span className={`text-green-dark`}>Sign In with Google</span>
                                         </div>
                                     </button>
                                 </>

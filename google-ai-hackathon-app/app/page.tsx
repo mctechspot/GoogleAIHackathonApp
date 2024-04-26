@@ -35,12 +35,13 @@ export default function Home() {
               onClick={() => signIn()}>
               <div className={"flex items-center gap-2"}>
                 <FcGoogle />
-                <span>Sign In with Google</span>
+                <span className={`text-green-dark`}>Sign In with Google</span>
               </div>
             </button><br />
 
             <Link href={"/generate"}
-              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg min-w-[260px]"}>
+              className={`block bg-green-standard px-10 py-5 w-fit m-auto text-center \ 
+              text-green-dark font-black rounded-lg min-w-[260px]`}>
               Try without Account
             </Link>
           </div>

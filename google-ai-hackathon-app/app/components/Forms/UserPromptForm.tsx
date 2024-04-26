@@ -185,9 +185,9 @@ export default function UserPromptForm(
 
 
                 <div className={"flex gap-2 w-full"}>
-                    <button type={"submit"} className={"bg-green-standard rounded p-2 w-full font-black disabled:bg-green-disabled"}
+                    <button type={"submit"} className={"bg-green-standard rounded p-2 w-full text-green-dark font-black disabled:bg-green-disabled"}
                         disabled={contentGenerationRunning}>Generate</button>
-                    <button type={"button"} className={"bg-green-standard rounded font-black p-2 w-full"}
+                    <button type={"button"} className={"bg-green-standard rounded text-green-dark font-black p-2 w-full"}
                         onClick={() => {
                             setUserPrompt({ ...userPrompt, prompt: "", image: null });
                             setImagePreviewSrc("");

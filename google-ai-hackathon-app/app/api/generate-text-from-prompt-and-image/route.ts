@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
+import { uuidv7 } from "uuidv7";
 
 export async function POST(request: NextRequest, response: NextResponse) {
     try {
