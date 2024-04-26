@@ -31,7 +31,7 @@ export default function Home() {
             </Link>
 
             <button
-              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg"}
+              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg min-w-[260px]"}
               onClick={() => signIn()}>
               <div className={"flex items-center gap-2"}>
                 <FcGoogle />
@@ -40,7 +40,7 @@ export default function Home() {
             </button><br />
 
             <Link href={"/generate"}
-              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg"}>
+              className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg min-w-[260px]"}>
               Try without Account
             </Link>
           </div>
