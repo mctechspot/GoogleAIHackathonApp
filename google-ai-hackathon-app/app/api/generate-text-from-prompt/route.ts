@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { uuidv7 } from "uuidv7";
+import { getUserIdFromEmail } from "@/app/api/db/Users"
 
 export async function POST(request: NextRequest, response: NextResponse){
     try{
@@ -18,6 +19,8 @@ export async function POST(request: NextRequest, response: NextResponse){
                 token: nextAuthSessionCookie.value,
                 secret: process.env.NEXTAUTH_SECRET!,
             });
+            const userIdFromEmail = await getUserIdFromEmail(userData.email);
+            console.log(userIdFromEmail);
         } else {
             userData = null;
         }

@@ -5,6 +5,7 @@ import {
     GeneratedArtContentSuccess, 
     GeneratedContentWarnings 
 } from "@/app/types/Response";
+import { ContentLookupDataProps, ContentLookupDataType } from "@/app/types/ContentLookupData"
 
 export type UserFormProps = {
     prompt: string;
@@ -22,6 +23,7 @@ export type UserFormType = {
     userPrompt: UserFormProps;
     setUserPrompt: React.Dispatch<SetStateAction<UserFormProps>>;
     contentCategory: number;
+    contentLookupData: ContentLookupDataProps;
 }
 
 export type CompleteUserFormType = {
@@ -32,4 +34,5 @@ export type CompleteUserFormType = {
     generatedContent: GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null;
     setGeneratedContent: React.Dispatch<SetStateAction<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>>;
     contentCategory: number;
+    contentLookupData: ContentLookupDataProps;
 }

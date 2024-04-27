@@ -14,6 +14,7 @@ import {
     GeneratedArtContentSuccess,
     GeneratedContentWarnings
 } from "@/app/types/Response";
+import { ContentLookupDataProps, ContentLookupDataError } from "@/app/types/ContentLookupData"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import UserSideBar from "@/app/components/User/UserSideBar"
 
@@ -28,6 +29,31 @@ export default function GenerateScreen() {
     const [contentGenerationRunning, setContentGenerationRunning] = useState<boolean>(false);
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>(null);
     const [contentCategory, setContentCategory] = useState<number>(1);
+    const [contentLookupData, setContentLookupData] = useState<ContentLookupDataProps | ContentLookupDataError | null>(null);
+
+
+    useEffect(() => {
+        fetchContentLookupData();
+    }, []);
+
+    const fetchContentLookupData = async (): Promise<void> => {
+        try {
+            const contentLookupDataRes = await fetch(`/api/fetch-content-lookup-data`, {
+                "method": "GET"
+            });
+            const contentLookupDataJson = await contentLookupDataRes.json();
+            if(!("error" in contentLookupDataJson)){
+                setUserPrompt({...userPrompt, 
+                    content_type: contentLookupDataJson.literature_content_types[0].key,
+                    orientation: contentLookupDataJson.image_orientations[0].key
+                })
+            }
+            console.log(contentLookupDataJson);
+            setContentLookupData(contentLookupDataJson);
+        } catch (error: any) {
+            console.log(`Error fetching content lookup data: ${error.message}.`);
+        }
+    }
 
     return (
         <>
@@ -38,51 +64,72 @@ export default function GenerateScreen() {
                     <Header />
                 </div>
 
-                <div>
-                    <div>
+                {contentLookupData ? (
 
-                        <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
-                            {/* Tab to switch between literary and art content generators */}
-                            <div className={`flex justify-center items-center gap-5 f-full`}>
-                                <div className={`${contentCategory === 1 ? (`bg-green-standard text-green-dark`) : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
-                                    onClick={() => setContentCategory(1)}>Literature</div>
-                                <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
-                                    onClick={() => setContentCategory(2)}>Art</div>
-                            </div><br />
+                    !("error" in contentLookupData) ? (
+                        <>
+                            <div>
+                                <div>
 
-                            <div className={"grid grid-cols-2 gap-20 max-[900px]:grid-cols-1"}>
+                                    <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
+                                        {/* Tab to switch between literary and art content generators */}
+                                        <div className={`flex justify-center items-center gap-5 f-full`}>
+                                            <div className={`${contentCategory === 1 ? (`bg-green-standard text-green-dark`) : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
+                                                onClick={() => setContentCategory(1)}>Literature</div>
+                                            <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
+                                                onClick={() => setContentCategory(2)}>Art</div>
+                                        </div><br />
 
-                                {/* User Prompt Form */}
-                                <div className={"w-full"}>
+                                        <div className={"grid grid-cols-2 gap-20 max-[900px]:grid-cols-1"}>
 
-                                    <UserPromptForm
-                                        userPrompt={userPrompt}
-                                        setUserPrompt={setUserPrompt}
-                                        contentGenerationRunning={contentGenerationRunning}
-                                        setContentGenerationRunning={setContentGenerationRunning}
-                                        generatedContent={generatedContent}
-                                        setGeneratedContent={setGeneratedContent}
-                                        contentCategory={contentCategory}
-                                    />
+                                            {/* User Prompt Form */}
+                                            <div className={"w-full"}>
 
-                                </div>
+                                                <UserPromptForm
+                                                    userPrompt={userPrompt}
+                                                    setUserPrompt={setUserPrompt}
+                                                    contentGenerationRunning={contentGenerationRunning}
+                                                    setContentGenerationRunning={setContentGenerationRunning}
+                                                    generatedContent={generatedContent}
+                                                    setGeneratedContent={setGeneratedContent}
+                                                    contentCategory={contentCategory}
+                                                    contentLookupData={contentLookupData}
+                                                />
 
-                                {/* Generated Content */}
-                                <div className={"w-full"}>
-                                    <GeneratedContent
-                                        userPrompt={userPrompt}
-                                        setUserPrompt={setUserPrompt}
-                                        contentGenerationRunning={contentGenerationRunning}
-                                        setContentGenerationRunning={setContentGenerationRunning}
-                                        generatedContent={generatedContent}
-                                        setGeneratedContent={setGeneratedContent}
-                                        contentCategory={contentCategory}
-                                    />
+                                            </div>
+
+                                            {/* Generated Content */}
+                                            <div className={"w-full"}>
+                                                <GeneratedContent
+                                                    userPrompt={userPrompt}
+                                                    setUserPrompt={setUserPrompt}
+                                                    contentGenerationRunning={contentGenerationRunning}
+                                                    setContentGenerationRunning={setContentGenerationRunning}
+                                                    generatedContent={generatedContent}
+                                                    setGeneratedContent={setGeneratedContent}
+                                                    contentCategory={contentCategory}
+                                                    contentLookupData={contentLookupData}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </>
+                    ) : (
+                        <>
+                            <p className={`${lightTheme ? ("text-green-dark") : ("text-white")} text-center`}>
+                                Oops. There is an error on our side. Hang tight until we resolve things.
+                            </p>
+                        </>
+                    )
+                ) :
+                    (
+                        <>
+                            <div className={"min-h-min-content-height"}></div>
+                        </>
+                    )
+                }
 
                 {/* Footer */}
                 <div className={"sticky"}>

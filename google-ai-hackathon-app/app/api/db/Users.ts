@@ -64,4 +64,25 @@ export const updateUserLastLogin = async (email: string, last_login: any): Promi
     }
 }
 
-
+// Function to update user last login timestamp
+export const getUserIdFromEmail = async (email: string): Promise<any> => {
+    try {
+        // Query to update user last login timestamp
+        const getUserIdFromEmailQuery = {
+            name: "upate-user-last-login",
+            text: "SELECT id from users WHERE email = $1",
+            values: [email]
+        };
+        const userIdFromEmailRes = await pool.query(getUserIdFromEmailQuery);
+        let success: boolean = false;
+        if (userIdFromEmailRes.rowCount) {
+            success = true;
+            return { "response": userIdFromEmailRes.rows };
+        }
+        return {"error": "Error getting user id from email."}
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting user Id from email: ${error.message}`);
+        return { "error": error.message };
+    }
+}

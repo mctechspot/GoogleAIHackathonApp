@@ -11,7 +11,7 @@ import GeneratedArtGrid from "@/app/components/Content/GeneratedArtGrid"
 
 export default function GeneratedContent(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
-        generatedContent, setGeneratedContent, contentCategory }: CompleteUserFormType) {
+        generatedContent, setGeneratedContent, contentCategory, contentLookupData }: CompleteUserFormType) {
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const generatedContentContainer: RefObject<HTMLDivElement> | null = useRef(null);
@@ -60,7 +60,8 @@ export default function GeneratedContent(
                     if ("response_images" in generatedContent) {
                         const jsxContent = <GeneratedArtGrid
                             response_images={generatedContent.response_images}
-                            orientation={userPrompt.orientation} />;
+                            orientation={userPrompt.orientation}
+                            timestamp={generatedContent.timestamp} />;
                         const htmlString = ReactDOMServer.renderToString(jsxContent);
                         generatedContentElement.innerHTML = htmlString;
                     }

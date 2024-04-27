@@ -15,12 +15,16 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
         // Get user credentials from next-auth session token if it exsists
         let userData: any = null;
+        let userId: string = "";
         if (nextAuthSessionCookie !== undefined && nextAuthSessionCookie && "value" in nextAuthSessionCookie) {
             userData = await decode({
                 token: nextAuthSessionCookie.value,
                 secret: process.env.NEXTAUTH_SECRET!,
             });
             console.log(userData);
+            if("response" in  userData && userData.response.length > 0){
+                userId = userData.response[0].id;
+            }
         } else {
             userData = null;
         }
