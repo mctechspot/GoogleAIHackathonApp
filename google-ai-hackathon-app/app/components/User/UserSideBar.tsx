@@ -45,7 +45,7 @@ export default function UserSideBar() {
                     <div className={`absolute ${lightTheme ? ("bg-white") : ("bg-green-dark")} top-0 bottom-0 z-10 border border-solid border-r-green-standard max-w-[250px]`}>
                         <div className={"p-5"}>
                             <div className={`flex justify-end text-xl font-black \
-                                        cursor-pointer ${lightTheme ? ("text-black") : ("text-green-standard")}`}
+                                        cursor-pointer ${lightTheme ? ("text-green-dark") : ("text-green-standard")}`}
                                 onClick={() => setOpenUserSideBar(false)}>
                                 <IoClose />
                             </div><br />
@@ -92,7 +92,7 @@ export default function UserSideBar() {
             ) :
                 (
                     <>
-                        <button className={`absolute ${lightTheme ? ("text-black") : ("text-white")} \
+                        <button className={`absolute ${lightTheme ? ("text-green-dark") : ("text-white")} \
                                     text-2xl p-5 cursor-pointer h-fit w-fit`}
                             onClick={() => setOpenUserSideBar(true)}>
                             <FaRegUserCircle />

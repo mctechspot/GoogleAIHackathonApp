@@ -46,7 +46,7 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt, content
                     }}>
                     <div>
                         <div className={"flex items-center justify-center gap-2"}>
-                            <div className={`${lightTheme ? ("text-black") : ("text-white")}`}>
+                            <div className={`${lightTheme ? ("text-green-dark") : ("text-white")}`}>
                                 {dropdownData.find((dropdownDataEntry: ContentDropdownProps, index: number) => dropdownDataEntry.key === userPrompt.content_type).value}
                             </div>
                             <div className={"text-green-text"}>
@@ -65,8 +65,8 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt, content
                                     <>
                                         <div
                                             key={`dropdown-option-${index + 1}`}
-                                            className={`${userPrompt.content_type === dropdownDataEntry.key ? (`bg-green-standard`) : (lightTheme ? ("text-black") : ("text-white"))}
-                                     hover:bg-green-standard hover:text-black w-full py-2 px-10 w-full cursor-pointer`}
+                                            className={`${userPrompt.content_type === dropdownDataEntry.key ? (`bg-green-standard`) : (lightTheme ? ("text-green-dark") : ("text-white"))}
+                                     hover:bg-green-standard hover:text-green-dark w-full py-2 px-10 w-full cursor-pointer`}
                                             onClick={() => {
                                                 setUserPrompt({ ...userPrompt, content_type: dropdownDataEntry.key });
                                                 setOpenDropdown(false);

@@ -21,7 +21,6 @@ export const addUser = async (id: string, email: string, now: any): Promise<any>
 
         // Return success message for adding new user
         if (addUserRes.rowCount && addUserRes.rowCount === 1) {
-            console.log("TTTT: ", addUserRes.rowCount);
             successMessage = "Successfully registered user."
             return { "response": successMessage };
         } else { // If user already exists update last  login datae

@@ -47,9 +47,9 @@ export default function GenerateScreen() {
                         <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
                             {/* Tab to switch between literary and art content generators */}
                             <div className={`flex justify-center items-center gap-5 f-full`}>
-                                <div className={`${contentCategory === 1 ? (`bg-green-standard text-black`) : (lightTheme ? ("text-black") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
+                                <div className={`${contentCategory === 1 ? (`bg-green-standard text-green-dark`) : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
                                     onClick={() => setContentCategory(1)}>Literature</div>
-                                <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-black") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
+                                <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
                                     onClick={() => setContentCategory(2)}>Art</div>
                             </div><br />
 

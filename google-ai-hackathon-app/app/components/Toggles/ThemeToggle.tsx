@@ -17,7 +17,7 @@ export default function ThemeToggle() {
     return (
         <>
             <div className={`absolute right-0 flex gap-2 justify-end items-center p-5 text-xl z-10 \
-            ${lightTheme ? ("text-black") : ("text-green-pale")}`}>
+            ${lightTheme ? ("text-green-dark") : ("text-green-pale")}`}>
                 <div className={"cursor-pointer"}
                     onClick={() => setLightTheme(true)}>
                     {lightTheme ? (<MdLightMode />) : (<MdOutlineLightMode />)}
