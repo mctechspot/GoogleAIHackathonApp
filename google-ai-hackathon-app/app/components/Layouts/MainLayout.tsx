@@ -43,6 +43,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <SessionProvider>
                 <ThemeContext.Provider value={{ lightTheme, setLightTheme }}>
                     <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")}`}>
+                        <UserSideBar />
                         <ThemeToggle />
                         {children}
                     </div>

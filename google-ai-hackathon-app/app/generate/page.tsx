@@ -38,9 +38,6 @@ export default function GenerateScreen() {
                     <Header />
                 </div>
 
-                {/* User Side Bar */}
-                <UserSideBar />
-
                 <div>
                     <div>
 
