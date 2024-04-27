@@ -20,6 +20,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 token: nextAuthSessionCookie.value,
                 secret: process.env.NEXTAUTH_SECRET!,
             });
+            console.log(userData);
         } else {
             userData = null;
         }
