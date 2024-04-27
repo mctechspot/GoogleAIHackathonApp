@@ -44,7 +44,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <ThemeContext.Provider value={{ lightTheme, setLightTheme }}>
                     <>
                         {lightTheme !== null ? (
-                            <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")}`}>
+                            <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")} fade-in`}>
                                 <UserSideBar />
                                 <ThemeToggle />
                                 {children}

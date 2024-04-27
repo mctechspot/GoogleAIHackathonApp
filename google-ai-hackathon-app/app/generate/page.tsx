@@ -70,7 +70,8 @@ export default function GenerateScreen() {
                             <div>
                                 <div>
 
-                                    <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
+                                    <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
+
                                         {/* Tab to switch between literary and art content generators */}
                                         <div className={`flex justify-center items-center gap-5 f-full`}>
                                             <div className={`${contentCategory === 1 ? (`bg-green-standard text-green-dark`) : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}

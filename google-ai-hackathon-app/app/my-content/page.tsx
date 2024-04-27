@@ -29,28 +29,39 @@ export default function GenerateScreen() {
     const [contentGenerationRunning, setContentGenerationRunning] = useState<boolean>(false);
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>(null);
     const [contentCategory, setContentCategory] = useState<number>(1);
-    const [contentLookupData, setContentLookupData] = useState<ContentLookupDataProps | ContentLookupDataError | null>(null);
+    const [literatureContentHistory, setLiteratureContentHistory] = useState<any>(null);
+    const [artContentHistory, setArtContentHistory] = useState<any>(null);
 
     useEffect(() => {
-        fetchContentLookupData();
+        fetchLiteratureContent();
+        //fetchArtContent();
     }, []);
 
-    const fetchContentLookupData = async (): Promise<void> => {
+    // Function to fetch literature content history
+    const fetchLiteratureContent = async (): Promise<void> => {
         try {
-            const contentLookupDataRes = await fetch(`/api/fetch-content-lookup-data`, {
+            const literatureContentHistoryRes = await fetch(`/api/fetch-literature-content-history`, {
                 "method": "GET"
             });
-            const contentLookupDataJson = await contentLookupDataRes.json();
-            if (!("error" in contentLookupDataJson)) {
-                setUserPrompt({
-                    ...userPrompt,
-                    content_type: contentLookupDataJson.literature_content_types[0].key,
-                    orientation: contentLookupDataJson.image_orientations[0].key
-                })
-            }
-            setContentLookupData(contentLookupDataJson);
+            const literatureContentHistoryJson = await literatureContentHistoryRes.json();
+            setLiteratureContentHistory(literatureContentHistoryJson);
+            console.log(literatureContentHistoryJson);
         } catch (error: any) {
-            console.log(`Error fetching content lookup data: ${error.message}.`);
+            console.log(`Error fetching literature content history: ${error.message}.`);
+        }
+    }
+
+    // Function to fetch art content history
+    const fetchArtContent = async (): Promise<void> => {
+        try {
+            const artContentHistoryRes = await fetch(`/api/fetch-art-content-history`, {
+                "method": "GET"
+            });
+            const artContentHistoryJson = await artContentHistoryRes.json();
+            setArtContentHistory(artContentHistoryJson);
+            console.log(artContentHistoryJson);
+        } catch (error: any) {
+            console.log(`Error fetching art content history: ${error.message}.`);
         }
     }
 
@@ -63,7 +74,7 @@ export default function GenerateScreen() {
                     <Header />
                 </div>
 
-                <div className={"mx-20 mb-5 max-[450px]:mx-10"}>
+                <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
                     
                     <p className={`${lightTheme ? ("text-green-text") : ("text-white")} text-center font-black`}>My Content</p><br />
                     {/* Tab to switch between literary and art content history */}

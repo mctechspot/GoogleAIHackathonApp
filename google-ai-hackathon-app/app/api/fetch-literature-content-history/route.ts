@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { getUserIdFromEmail } from "@/app/api/db/Users";
 import { fetchLiteraturePromptsForUser, fetchLiteratureContentForPrompt } from "@/app/api/db/Literature";
+import { generateSignedUrlFile } from "@/app/api/utils/gcp"
 
 export async function GET(request: NextRequest, response: NextResponse) {
     try {
@@ -31,16 +32,23 @@ export async function GET(request: NextRequest, response: NextResponse) {
                     // Fetch user content for each literature prompt 
                     const literaturePromptsAndContent = await Promise.all(fetchedLiteraturePrompts.response.map(async (prompt: any, index: number) => {
                         const fetchedLiteratureContentForPrompt = await fetchLiteratureContentForPrompt(prompt.id);
+                        
+                        // Get authenticated url if image was used in prompt
+                        let authenticatedImageUrl: any = null;
+                        if(prompt.image_path){
+                            const generatedSignedUrl = await generateSignedUrlFile(process.env.GCP_CONTENT_RESULTS_BUCKET!, prompt.image_path)
+                            authenticatedImageUrl = "url" in generatedSignedUrl ? generatedSignedUrl.url : "";
+                        }
+                        
                         let finalContent: any = null;
                         if ("response" in fetchedLiteratureContentForPrompt) {
                             finalContent = fetchedLiteratureContentForPrompt.response[0];
                         }
                         return {
-                            "prompt": prompt,
+                            "prompt": {...prompt, image_path: authenticatedImageUrl},
                             "content": prompt.success === 1 ? finalContent : null
                         }
                     }));
-                    console.log(literaturePromptsAndContent);
                     return NextResponse.json({
                         "response": literaturePromptsAndContent
                     }, {
