@@ -16,6 +16,28 @@ export default function UserSideBar() {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const [openUserSideBar, setOpenUserSideBar] = useState<boolean>(false);
 
+    useEffect (() => {
+        if(status === "authenticated"){
+            checkForUserInDb();
+        }
+    }, [status]);
+
+    const checkForUserInDb = async() => {
+        try{
+            const payload = {
+                "email": session?.user?.email
+            }
+            const checkForUserInDbRes = await fetch(`/api/check-for-user-in-db`, {
+                "method": "POST",
+                "body": JSON.stringify(payload)
+            });
+            const checkForUserInDbJson = await checkForUserInDbRes.json();
+            console.log(checkForUserInDbJson);
+        }catch(error: any){
+            console.log(`Error checking for user in database: ${error.mesage}.`);
+        }
+    };
+
     return (
         <>
             {openUserSideBar ? (
@@ -56,9 +78,7 @@ export default function UserSideBar() {
                                     <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center`}>You are not signed in and so your results will not be saved.</p><br />
                                     <button className={`block bg-green-standard p-2 w-fit m-auto \ 
                                 text-center font-black rounded-lg cursor-pointer`}
-                                        onClick={() => {
-                                            signIn();
-                                        }}>
+                                        onClick={() => {signIn()}}>
                                         <div className={"flex items-center gap-2"}>
                                             <FcGoogle />
                                             <span className={`text-green-dark`}>Sign In with Google</span>

@@ -12,8 +12,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
         const id: string = uuidv7();
         const addUserRes = await addUser(id, payload.email, getNowUtc());
 
-        console.log(addUserRes);
-
         // Success response
         if ("response" in addUserRes) {
             return NextResponse.json(addUserRes, {
@@ -26,7 +24,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         });
 
     } catch (error: any) {
-        console.log(`Error generating text content from prompt :${error.message}.`)
+        console.log(`Error adding or checking for user in database :${error.message}.`)
         return NextResponse.json({
             "error": error.message,
         }, {
