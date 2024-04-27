@@ -4,7 +4,9 @@ import { decode } from 'next-auth/jwt';
 import fs from 'fs'
 import { uuidv7 } from "uuidv7";
 import { uploadFile } from "@/app/api/utils/gcp";
+import { getNowUtc } from "@/app/utils/Dates"
 import { getImageTmpPathFromBase64String } from "@/app/utils/Files";
+import { addArtPrompt, addGeneratedArtContent } from "@/app/api/db/Art"
 
 export async function POST(request: NextRequest, response: NextResponse) {
     try {
@@ -22,7 +24,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 token: nextAuthSessionCookie.value,
                 secret: process.env.NEXTAUTH_SECRET!,
             });
-            if("response" in  userData && userData.response.length > 0){
+            if ("response" in userData && userData.response.length > 0) {
                 userId = userData.response[0].id;
             }
         } else {
@@ -30,7 +32,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
         }
 
         // Call endpoint to generate image from text prompt
-        const generateContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-image-from-text`, {
+        const requestTimestamp: any = getNowUtc();
+        const generatedContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-image-from-text`, {
             "body": JSON.stringify(payload),
             "method": "POST",
             "headers": {
@@ -39,46 +42,57 @@ export async function POST(request: NextRequest, response: NextResponse) {
         });
 
         // Get json response for generated literature content
-        const generateContentJson = await generateContentRes.json();
+        const generatedContentJson = await generatedContentRes.json();
 
-        if (userData && "response" in generateContentJson) {
+        if (userId !== "") {
 
             // Initialise ID for content entry in database
-            const contentEntryUUID: string = uuidv7();
-         
+            //const contentEntryUUID: string = uuidv7();
+            const promptId: string = uuidv7();
+
             // Convert base64 images to pngs and write to /tmp
-            const imagesWritten = await Promise.all(generateContentJson.response.map(async (base64String: string, index: number) => {
-                try {
-                    return getImageTmpPathFromBase64String(base64String);
-                } catch (error: any) {
-                    console.log(`Error writing file image_${index + 1}.png: ${error.message}`);
-                    return {
-                        imageName: null,
-                        imagePath: null,
-                    };
-                }
+            const imagesWrittenToTmp = await Promise.all(generatedContentJson.response.map(async (base64String: string, index: number) => {
+                return getImageTmpPathFromBase64String(base64String);
             }));
 
+            let finalGeneratedImagePaths: any = [];
+
             // Upload generated images stored in /tmp file to GCP cloud storage bucket
-            const imageUploadResults = imagesWritten.forEach(async(image: any, index: number) => {
-                if("imageUUID" in image && "imageName" in image && "imagePath" in image){
+            const imageUploadResults = imagesWrittenToTmp.forEach(async (image: any, index: number) => {
+                if ("imageUUID" in image && "imageName" in image && "imagePath" in image) {
 
                     // Set unique destination file of image in GCP Cloud Storage bucket
-                    const destinationFilePath:string = `images/${userData.email}/${contentEntryUUID}/${image.imageName}`;
-                    
+                    const destinationFilePath: string = `art/${userId}/${promptId}/image/${image.imageName}`;
+                    finalGeneratedImagePaths.push(destinationFilePath);
+
                     // upload file to GCP
                     const uploadFileResult = await uploadFile(process.env.GCP_CONTENT_RESULTS_BUCKET!, image.imagePath, destinationFilePath);
-                    
+
                     // Remove file from /tmp
                     fs.unlinkSync(image.imagePath);
 
                     return uploadFileResult;
                 }
-            });            
+            });
+
+            const addArtPromptRes = await addArtPrompt(promptId, userId, requestTimestamp, payload, generatedContentJson);
+
+            if ("prompt_id" in addArtPromptRes) {
+
+                finalGeneratedImagePaths.forEach(async(imagePath: string, index: number) => {
+                    let finalGeneratedContent = {
+                        "image_no": index + 1,
+                        "image_path": imagePath
+                    }
+                    const addGeneratedArtContentRes = await addGeneratedArtContent(userId, addArtPromptRes.prompt_id, finalGeneratedContent);
+                });
+
+            }
         }
 
-        const status: number = "warning" in generateContentJson ? 400 : "error" in generateContentJson ? 500 : 200;
-        return NextResponse.json(generateContentJson, { status: status });
+        const status: number = "warning" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
+        
+        return NextResponse.json(generatedContentJson, { status: status });
 
     } catch (error: any) {
         console.log(`Error generating image from text prompt: ${error.message}.`)
