@@ -69,7 +69,7 @@ export const getUserIdFromEmail = async (email: string): Promise<any> => {
     try {
         // Query to update user last login timestamp
         const getUserIdFromEmailQuery = {
-            name: "upate-user-last-login",
+            name: "get-user-if-from-email",
             text: "SELECT id from users WHERE email = $1",
             values: [email]
         };

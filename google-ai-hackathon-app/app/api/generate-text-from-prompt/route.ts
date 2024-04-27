@@ -3,6 +3,8 @@ import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { uuidv7 } from "uuidv7";
 import { getUserIdFromEmail } from "@/app/api/db/Users"
+import { addLiteraturePrompt, addGeneratedLiteratureContent } from "@/app/api/db/Literature"
+import { getNowUtc } from "@/app/utils/Dates"
 
 export async function POST(request: NextRequest, response: NextResponse){
     try{
@@ -14,18 +16,26 @@ export async function POST(request: NextRequest, response: NextResponse){
 
         // Get user credentials from next-auth session token if it exsists
         let userData: any = null;
+        let userId: string = "";
         if (nextAuthSessionCookie !== undefined && nextAuthSessionCookie && "value" in nextAuthSessionCookie) {
             userData = await decode({
                 token: nextAuthSessionCookie.value,
                 secret: process.env.NEXTAUTH_SECRET!,
             });
+
+            // Get user Id for email decoded in next-auth sessiont token
             const userIdFromEmail = await getUserIdFromEmail(userData.email);
             console.log(userIdFromEmail);
+            if("response" in userIdFromEmail){
+                userId = userIdFromEmail.response[0].id
+            }
         } else {
             userData = null;
         }
 
-        const generateContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-text`, {
+        // Call endpoint to generate text for prompt that uses solely text
+        const request_timestamp: any = getNowUtc();
+        const generatedContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-text`, {
             "body": JSON.stringify(payload),
             "method": "POST",
             "headers": {
@@ -33,11 +43,24 @@ export async function POST(request: NextRequest, response: NextResponse){
             }
         });
 
-        const generateContentJson = await generateContentRes.json();
-        
-        const status: number = "warning" in generateContentJson ? 400 : "error" in generateContentJson ? 500 : 200;
+        // Get json response for generated literature content
+        const generatedContentJson = await generatedContentRes.json();
 
-        return NextResponse.json(generateContentJson, {status: status});
+        // If there is a present Google session, save literature prompt and generated content to database
+        if (userData && userId !== ""){
+            const imagePath = null;
+
+            // Save literature prompt to database
+            const addLiteraturePromptRes = await addLiteraturePrompt(userId, request_timestamp, payload, generatedContentJson, imagePath);
+            //console.log(addLiteraturePromptRes);
+            // Use generated id for literature prompt to save generated literature content in database
+            if("prompt_id" in addLiteraturePromptRes){
+                //console.log("success");
+                const addGeneratedLiteratureContentRes = await addGeneratedLiteratureContent(userId, addLiteraturePromptRes.prompt_id, payload, generatedContentJson);
+            }
+        }
+        const status: number = "warning" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
+        return NextResponse.json(generatedContentJson, {status: status});
 
     }catch(error: any){
         console.log(`Error generating text content from prompt :${error.message}.`)

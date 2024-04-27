@@ -4,6 +4,7 @@ import { decode } from 'next-auth/jwt';
 import fs from 'fs'
 import { uuidv7 } from "uuidv7";
 import { uploadFile } from "@/app/api/utils/gcp";
+import { getImageTmpPathFromBase64String } from "@/app/utils/Files";
 
 export async function POST(request: NextRequest, response: NextResponse) {
     try {
@@ -47,22 +48,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             // Convert base64 images to pngs and write to /tmp
             const imagesWritten = await Promise.all(generateContentJson.response.map(async (base64String: string, index: number) => {
                 try {
-                    // Convert base64 image string to a buffer
-                    const imageData: any = Buffer.from(base64String, 'base64');
-
-                    // Initialise id, file name and file path at /tmp for image
-                    const imageUUID: string = uuidv7();
-                    const tmpImageName:string = `image_${imageUUID}.png`;
-                    const tmpImagePath: string = `/tmp/${tmpImageName}`;
-
-                    // Save generated images to in /tmp
-                    fs.writeFileSync(tmpImagePath, imageData);
-                    console.log(`${tmpImagePath} successfully written.`);
-                    return {
-                        imageUUID: imageUUID,
-                        imageName: tmpImageName,
-                        imagePath: tmpImagePath,
-                    };
+                    return getImageTmpPathFromBase64String(base64String);
                 } catch (error: any) {
                     console.log(`Error writing file image_${index + 1}.png: ${error.message}`);
                     return {
