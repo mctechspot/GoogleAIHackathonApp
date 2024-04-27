@@ -19,9 +19,6 @@ export default function UserPromptForm(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
         generatedContent, setGeneratedContent, contentCategory, contentLookupData }: CompleteUserFormType) {
 
-    console.log("LOOKUP: ", contentLookupData);
-    console.log("USER PROMPT: ", userPrompt);
-
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("");
 

@@ -20,7 +20,6 @@ export default function Home() {
         "method": "POST",
       });
       const checkForUserJson = await checkForUser.json();
-      console.log(checkForUserJson);
     } catch (error: any) {
       console.log(`Error checking if user exists in database after login : ${error.message}`);
     }

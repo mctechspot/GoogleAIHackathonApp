@@ -22,7 +22,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 token: nextAuthSessionCookie.value,
                 secret: process.env.NEXTAUTH_SECRET!,
             });
-            console.log(userData);
             if("response" in  userData && userData.response.length > 0){
                 userId = userData.response[0].id;
             }
@@ -30,6 +29,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             userData = null;
         }
 
+        // Call endpoint to generate image from text prompt
         const generateContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-image-from-text`, {
             "body": JSON.stringify(payload),
             "method": "POST",
@@ -38,6 +38,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             }
         });
 
+        // Get json response for generated literature content
         const generateContentJson = await generateContentRes.json();
 
         if (userData && "response" in generateContentJson) {

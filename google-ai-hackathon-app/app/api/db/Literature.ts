@@ -31,11 +31,12 @@ export const getLiteratureContentTypes = async (): Promise<any> => {
 
 // Function to add literature prompt
 export const addLiteraturePrompt = async (
-    user_id: string, 
-    request_timestamp: any, 
+    promptId: string,
+    userId: string, 
+    requestTimestamp: any, 
     payload: any, 
-    response: any,
-    imagePath: string | null): Promise<any> => {
+    response: any
+): Promise<any> => {
     try {
 
         // Possible query success message
@@ -56,7 +57,7 @@ export const addLiteraturePrompt = async (
             warning_or_error_message = response.error;
         }
         
-        const promptId: string = uuidv7();
+        //const promptId: string = uuidv7();
         const responseTimestamp: any = getNowUtc();
 
         // Query to add new user
@@ -65,7 +66,7 @@ export const addLiteraturePrompt = async (
             text: "INSERT INTO literature_prompts (id, user_id, prompt, image_path, content_type, request_timestamp, \
             response_timestamp, success, warning_or_error, warning_or_error_message) VALUES \
             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
-            values: [promptId, user_id, payload.prompt, imagePath, payload.content_type, request_timestamp, responseTimestamp, 
+            values: [promptId, userId, payload.prompt, payload.image, payload.content_type, requestTimestamp, responseTimestamp, 
                 success, warning_or_error, warning_or_error_message]
         };
 

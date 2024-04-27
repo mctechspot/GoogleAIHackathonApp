@@ -37,7 +37,6 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt,
             setDropdownData(contentLookupData.art_styles);
             setUserPrompt({...userPrompt, content_type: contentLookupData.art_styles[0].key})
         }
-        console.log("dddd: ", dropdownData);
     }, [contentCategory]);
 
     return (

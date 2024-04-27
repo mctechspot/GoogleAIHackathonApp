@@ -48,7 +48,6 @@ export default function GenerateScreen() {
                     orientation: contentLookupDataJson.image_orientations[0].key
                 })
             }
-            console.log(contentLookupDataJson);
             setContentLookupData(contentLookupDataJson);
         } catch (error: any) {
             console.log(`Error fetching content lookup data: ${error.message}.`);

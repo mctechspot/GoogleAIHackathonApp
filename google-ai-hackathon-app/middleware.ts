@@ -29,15 +29,12 @@ export async function middleware(request: NextRequest) {
 // Function to check if user exist in database after initiating Google session
 const checkForUserInDb = async (userData: any): Promise<any> => {
     try {
-        console.log(process.env.DOMAIN);
         const checkForUser = await fetch(`${process.env.DOMAIN!}/api/check-for-user-in-db`, {
             "method": "POST",
             "body": JSON.stringify(userData)
         });
         const checkForUserJson = await checkForUser.json();
-        console.log(checkForUserJson);
         return { "response": checkForUserJson };
-
     } catch (error: any) {
         console.log(`Error checking if user exists in database after login : ${error.message}`);
         return { "error": error.message };

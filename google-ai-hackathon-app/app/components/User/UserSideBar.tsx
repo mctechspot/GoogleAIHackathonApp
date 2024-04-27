@@ -32,7 +32,7 @@ export default function UserSideBar() {
                 "body": JSON.stringify(payload)
             });
             const checkForUserInDbJson = await checkForUserInDbRes.json();
-            console.log(checkForUserInDbJson);
+
         }catch(error: any){
             console.log(`Error checking for user in database: ${error.mesage}.`);
         }

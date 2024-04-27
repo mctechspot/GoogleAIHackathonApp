@@ -25,7 +25,6 @@ export async function POST(request: NextRequest, response: NextResponse){
 
             // Get user Id for email decoded in next-auth sessiont token
             const userIdFromEmail = await getUserIdFromEmail(userData.email);
-            console.log(userIdFromEmail);
             if("response" in userIdFromEmail){
                 userId = userIdFromEmail.response[0].id
             }
@@ -48,18 +47,23 @@ export async function POST(request: NextRequest, response: NextResponse){
 
         // If there is a present Google session, save literature prompt and generated content to database
         if (userData && userId !== ""){
-            const imagePath = null;
+            const promptId: string = uuidv7();
+            const finalPayload = {
+                ...payload,
+                "image": null
+            }
 
             // Save literature prompt to database
-            const addLiteraturePromptRes = await addLiteraturePrompt(userId, request_timestamp, payload, generatedContentJson, imagePath);
-            //console.log(addLiteraturePromptRes);
+            const addLiteraturePromptRes = await addLiteraturePrompt(promptId, userId, request_timestamp, payload, generatedContentJson);
+            
             // Use generated id for literature prompt to save generated literature content in database
             if("prompt_id" in addLiteraturePromptRes){
-                //console.log("success");
-                const addGeneratedLiteratureContentRes = await addGeneratedLiteratureContent(userId, addLiteraturePromptRes.prompt_id, payload, generatedContentJson);
+                const addGeneratedLiteratureContentRes = await addGeneratedLiteratureContent(userId, promptId, payload, generatedContentJson);
             }
         }
+
         const status: number = "warning" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
+        
         return NextResponse.json(generatedContentJson, {status: status});
 
     }catch(error: any){
