@@ -5,6 +5,7 @@ import fs from 'fs'
 import { uuidv7 } from "uuidv7";
 import { uploadFile } from "@/app/api/utils/gcp";
 import { getNowUtc } from "@/app/utils/Dates"
+import { getUserIdFromEmail } from "@/app/api/db/Users"
 import { getImageTmpPathFromBase64String } from "@/app/utils/Files";
 import { addArtPrompt, addGeneratedArtContent } from "@/app/api/db/Art"
 
@@ -24,8 +25,11 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 token: nextAuthSessionCookie.value,
                 secret: process.env.NEXTAUTH_SECRET!,
             });
-            if ("response" in userData && userData.response.length > 0) {
-                userId = userData.response[0].id;
+
+            // Get user Id for email decoded in next-auth sessiont token
+            const userIdFromEmail = await getUserIdFromEmail(userData.email);
+            if ("response" in userIdFromEmail) {
+                userId = userIdFromEmail.response[0].id
             }
         } else {
             userData = null;
@@ -44,54 +48,57 @@ export async function POST(request: NextRequest, response: NextResponse) {
         // Get json response for generated literature content
         const generatedContentJson = await generatedContentRes.json();
 
-        if (userId !== "") {
+        if (userData && userId !== "") {
 
             // Initialise ID for content entry in database
             //const contentEntryUUID: string = uuidv7();
             const promptId: string = uuidv7();
-
-            // Convert base64 images to pngs and write to /tmp
-            const imagesWrittenToTmp = await Promise.all(generatedContentJson.response.map(async (base64String: string, index: number) => {
-                return getImageTmpPathFromBase64String(base64String);
-            }));
-
             let finalGeneratedImagePaths: any = [];
 
-            // Upload generated images stored in /tmp file to GCP cloud storage bucket
-            const imageUploadResults = imagesWrittenToTmp.forEach(async (image: any, index: number) => {
-                if ("imageUUID" in image && "imageName" in image && "imagePath" in image) {
+            if ("response" in generatedContentJson) {
+                // Convert base64 images to pngs and write to /tmp
+                const imagesWrittenToTmp = await Promise.all(generatedContentJson.response.map(async (base64String: string, index: number) => {
+                    return getImageTmpPathFromBase64String(base64String);
+                }));
 
-                    // Set unique destination file of image in GCP Cloud Storage bucket
-                    const destinationFilePath: string = `art/${userId}/${promptId}/image/${image.imageName}`;
-                    finalGeneratedImagePaths.push(destinationFilePath);
 
-                    // upload file to GCP
-                    const uploadFileResult = await uploadFile(process.env.GCP_CONTENT_RESULTS_BUCKET!, image.imagePath, destinationFilePath);
+                // Upload generated images stored in /tmp file to GCP cloud storage bucket
+                const imageUploadResults = imagesWrittenToTmp.forEach(async (image: any, index: number) => {
+                    if ("imageUUID" in image && "imageName" in image && "imagePath" in image) {
 
-                    // Remove file from /tmp
-                    fs.unlinkSync(image.imagePath);
+                        // Set unique destination file of image in GCP Cloud Storage bucket
+                        const destinationFilePath: string = `art/${userId}/${promptId}/images/${image.imageName}`;
+                        finalGeneratedImagePaths.push(destinationFilePath);
 
-                    return uploadFileResult;
-                }
-            });
+                        // upload file to GCP
+                        const uploadFileResult = await uploadFile(process.env.GCP_CONTENT_RESULTS_BUCKET!, image.imagePath, destinationFilePath);
+
+                        // Remove file from /tmp
+                        fs.unlinkSync(image.imagePath);
+
+                        return uploadFileResult;
+                    }
+                });
+            }
 
             const addArtPromptRes = await addArtPrompt(promptId, userId, requestTimestamp, payload, generatedContentJson);
 
-            if ("prompt_id" in addArtPromptRes) {
+            if ("prompt_id" in addArtPromptRes && finalGeneratedImagePaths.length > 0) {
 
-                finalGeneratedImagePaths.forEach(async(imagePath: string, index: number) => {
+                finalGeneratedImagePaths.forEach(async (imagePath: string, index: number) => {
                     let finalGeneratedContent = {
                         "image_no": index + 1,
                         "image_path": imagePath
                     }
                     const addGeneratedArtContentRes = await addGeneratedArtContent(userId, addArtPromptRes.prompt_id, finalGeneratedContent);
+
                 });
 
             }
         }
 
         const status: number = "warning" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
-        
+
         return NextResponse.json(generatedContentJson, { status: status });
 
     } catch (error: any) {
