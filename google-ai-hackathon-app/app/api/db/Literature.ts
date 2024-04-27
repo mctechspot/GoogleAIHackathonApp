@@ -129,3 +129,57 @@ export const addGeneratedLiteratureContent = async (userId: string, promptId: st
         return { "error": error.message };
     }
 }
+
+// Function to fetch literature prompts for a user
+export const fetchLiteraturePromptsForUser = async (userId: string): Promise<any> => {
+    try {
+
+        // Query to fetch literature prompts for user
+        const getLiteraturePromptsForUserQuery = {
+            name: "get-literature-prompts-for-user",
+            text: "SELECT * from literature_prompts where user_id = $1",
+            values: [userId]
+        };
+
+        // Attempt to fetch literature prompts for user
+        const literaturePromptsForUser = await pool.query(getLiteraturePromptsForUserQuery);
+        let success: boolean = false;
+        console.log(literaturePromptsForUser);
+        if (literaturePromptsForUser.rowCount) {
+            success = true;
+            return { "response": literaturePromptsForUser.rows };
+        }
+        return { "response": [] }
+
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting literature prompts for user: ${error.message}`);
+        return { "error": error.message };
+    }
+}
+
+// Function to fetch literature prompts for a user
+export const fetchLiteratureContentForPrompt = async (promptId: string): Promise<any> => {
+    try {
+        // Query to fetch literature content for prompt
+        const getLiteratureContentForPromptQuery = {
+            name: "get-literature-content-for-user",
+            text: "SELECT * from generated_literature WHERE prompt = $1",
+            values: [promptId]
+        };
+
+        // Attempt to fetch literature content for prompt
+        const literatureContentForPrompt = await pool.query(getLiteratureContentForPromptQuery);
+        let success: boolean = false;
+        console.log(literatureContentForPrompt);
+        if (literatureContentForPrompt.rowCount) {
+            success = true;
+            return { "response": literatureContentForPrompt.rows };
+        }
+        return { "response": [] }
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting literature content for prompt: ${error.message}`);
+        return { "error": error.message };
+    }
+}

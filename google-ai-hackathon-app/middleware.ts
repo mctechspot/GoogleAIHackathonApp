@@ -24,6 +24,26 @@ export async function middleware(request: NextRequest) {
             userData = null;
         }
     }
+
+    // From my-content page, redirect to home page if user session is not present
+    if (request.nextUrl.pathname === "/my-content") {
+        const cookieStore = cookies();
+        const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
+
+        // Get user credentials from next-auth session token if it exsists
+        let userData: any = null;
+        if (nextAuthSessionCookie !== undefined && nextAuthSessionCookie && "value" in nextAuthSessionCookie) {
+            userData = await decode({
+                token: nextAuthSessionCookie.value,
+                secret: process.env.NEXTAUTH_SECRET!,
+            });
+        } else {
+            userData = null;
+        }
+        if(!userData){
+            return NextResponse.redirect(new URL('/', request.url))
+        }
+    }
 }
 
 // Function to check if user exist in database after initiating Google session

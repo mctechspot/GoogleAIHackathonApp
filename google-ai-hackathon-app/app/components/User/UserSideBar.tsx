@@ -63,7 +63,11 @@ export default function UserSideBar() {
                                     <div className={`${lightTheme ? ("text-black") : ("text-white")}`}>
                                         <p className={"text-center"}>{session.user?.name}</p><br />
                                         <p className={"text-center"}>{session.user?.email}</p><br />
-                                    </div>
+                                        <Link href={"/my-content"}
+                                        className={`${lightTheme ? ("text-green-text"): ("text-white")} block text-center font-black`}>
+                                            My Content
+                                            </Link>
+                                    </div><br />
 
                                     <button className={`block bg-green-standard text-green-dark p-2 w-fit m-auto \ 
                                 text-center font-black rounded-lg cursor-pointer`}
