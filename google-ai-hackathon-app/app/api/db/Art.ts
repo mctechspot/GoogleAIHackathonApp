@@ -2,7 +2,7 @@ import { pool } from '@/app/api/db/Constants'
 import { getNowUtc } from '@/app/utils/Dates'
 import { uuidv7 } from "uuidv7";
 
-// Function to get art styles
+// Function to get all art styles
 export const getArtStyles = async (): Promise<any> => {
     try {
 
@@ -25,6 +25,33 @@ export const getArtStyles = async (): Promise<any> => {
     } catch (error: any) {
         // Return error
         console.log(`Error getting art styles: ${error.message}`);
+        return { "error": error.message };
+    }
+}
+
+// Function to get all art styles
+export const getArtStyleById = async (artStyleId: string): Promise<any> => {
+    try {
+
+        // Query to get art style by id
+        const getArtStyleByIdQuery = {
+            name: "get-art-style-by-id",
+            text: "SELECT * from art_styles WHERE id = $1",
+            values: [artStyleId]
+        };
+
+        // Attempt to get art style by id
+        const artStyleByIdRes = await pool.query(getArtStyleByIdQuery);
+        let success: boolean = false;
+        if (artStyleByIdRes.rowCount) {
+            success = true;
+            return { "response": artStyleByIdRes.rows };
+        }
+        return { "error": "Error getting art style by id." }
+
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting art style by id: ${error.message}`);
         return { "error": error.message };
     }
 }
@@ -52,6 +79,33 @@ export const getImageOrientations = async (): Promise<any> => {
     } catch (error: any) {
         // Return error
         console.log(`Error getting image orientations: ${error.message}`);
+        return { "error": error.message };
+    }
+}
+
+// Function to get image orientations
+export const getImageOrientationById = async (orientationId: string): Promise<any> => {
+    try {
+
+        // Query to get image orientation by id
+        const getImageOrientationByIdQuery = {
+            name: "get-image-orientation-by-id",
+            text: "SELECT * from image_orientations WHERE id = $1",
+            values: [orientationId]
+        };
+
+        // Attempt to get image orientation by id
+        const imageOrientationByIdRes = await pool.query(getImageOrientationByIdQuery);
+        let success: boolean = false;
+        if (imageOrientationByIdRes.rowCount) {
+            success = true;
+            return { "response": imageOrientationByIdRes.rows };
+        }
+        return { "error": "Error getting image orientation by id." }
+
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting image orientation by id: ${error.message}`);
         return { "error": error.message };
     }
 }
@@ -174,7 +228,6 @@ export const fetchArtPromptsForUser = async (userId: string): Promise<any> => {
         // Attempt to fetch art prompts for user
         const artPromptsForUser = await pool.query(getArtPromptsForUserQuery);
         let success: boolean = false;
-        console.log(artPromptsForUser);
         if (artPromptsForUser.rowCount) {
             success = true;
             return { "response": artPromptsForUser.rows };

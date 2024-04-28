@@ -2,7 +2,7 @@ import { pool } from '@/app/api/db/Constants'
 import { getNowUtc } from '@/app/utils/Dates'
 import { uuidv7 } from "uuidv7";
 
-// Function to add literature prompt
+// Function to fetch all literature content types
 export const getLiteratureContentTypes = async (): Promise<any> => {
     try {
 
@@ -28,6 +28,34 @@ export const getLiteratureContentTypes = async (): Promise<any> => {
         return { "error": error.message };
     }
 }
+
+// Function to fetch literature content type by Id
+export const getLiteratureContentTypeById = async (contentTypeId: string): Promise<any> => {
+    try {
+
+        // Query to get literature content type by is
+        const getLiteratureContentTypeByIdQuery = {
+            name: "get-literature-content-type-by-id",
+            text: "SELECT * from literature_content_types WHERE id = $1",
+            values: [contentTypeId]
+        };
+
+        // Attempt to get literature content type by id
+        const literatureContentTypeByIdRes = await pool.query(getLiteratureContentTypeByIdQuery);
+        let success: boolean = false;
+        if (literatureContentTypeByIdRes.rowCount) {
+            success = true;
+            return { "response": literatureContentTypeByIdRes.rows };
+        }
+        return { "error": "Error getting literature content type by id." }
+
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting literature content type by id: ${error.message}`);
+        return { "error": error.message };
+    }
+}
+
 
 // Function to add literature prompt
 export const addLiteraturePrompt = async (
@@ -171,7 +199,6 @@ export const fetchLiteratureContentForPrompt = async (promptId: string): Promise
         // Attempt to fetch literature content for prompt
         const literatureContentForPrompt = await pool.query(getLiteratureContentForPromptQuery);
         let success: boolean = false;
-        console.log(literatureContentForPrompt);
         if (literatureContentForPrompt.rowCount) {
             success = true;
             return { "response": literatureContentForPrompt.rows };

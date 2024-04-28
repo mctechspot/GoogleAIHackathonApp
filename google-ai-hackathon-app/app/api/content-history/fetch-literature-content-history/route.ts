@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { getUserIdFromEmail } from "@/app/api/db/Users";
-import { fetchLiteraturePromptsForUser, fetchLiteratureContentForPrompt } from "@/app/api/db/Literature";
+import { fetchLiteraturePromptsForUser, fetchLiteratureContentForPrompt, getLiteratureContentTypeById } from "@/app/api/db/Literature";
 import { generateSignedUrlFile } from "@/app/api/utils/gcp"
 
 export async function GET(request: NextRequest, response: NextResponse) {
@@ -33,6 +33,13 @@ export async function GET(request: NextRequest, response: NextResponse) {
                     const literaturePromptsAndContent = await Promise.all(fetchedLiteraturePrompts.response.map(async (prompt: any, index: number) => {
                         const fetchedLiteratureContentForPrompt = await fetchLiteratureContentForPrompt(prompt.id);
                         
+                        // Get literature prompt content type lookup data
+                        const literatureContentTypeRes: any = await getLiteratureContentTypeById(prompt.content_type);
+                        let finalLiteratureContentType = prompt.content_type;
+                        if("response" in literatureContentTypeRes){
+                            finalLiteratureContentType = literatureContentTypeRes.response[0];
+                        }
+
                         // Get authenticated url if image was used in prompt
                         let authenticatedImageUrl: any = null;
                         if(prompt.image_path){
@@ -45,7 +52,11 @@ export async function GET(request: NextRequest, response: NextResponse) {
                             finalContent = fetchedLiteratureContentForPrompt.response[0];
                         }
                         return {
-                            "prompt": {...prompt, image_path: authenticatedImageUrl},
+                            "prompt": {
+                                ...prompt, 
+                                "content_type": finalLiteratureContentType,
+                                "image_path": authenticatedImageUrl
+                            },
                             "content": prompt.success === 1 ? finalContent : null
                         }
                     }));

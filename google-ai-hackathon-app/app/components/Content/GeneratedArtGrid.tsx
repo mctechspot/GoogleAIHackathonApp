@@ -31,7 +31,6 @@ export default function GeneratedArtGrid({ response_images, orientation }: Gener
         const image3 = image3Ref.current ? image3Ref.current.src : null;
 
         const validImages: any = [image1, image2, image3].filter((image: string | null, index: number) => image);
-        console.log(validImages);
         let optimisedImageUrls: string[] = [];
         if (imageToDownload === "all") {
             optimisedImageUrls = validImages;

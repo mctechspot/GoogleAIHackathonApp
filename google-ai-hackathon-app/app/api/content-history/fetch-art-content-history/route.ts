@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { getUserIdFromEmail } from "@/app/api/db/Users";
-import { fetchArtPromptsForUser, fetchArtContentForPrompt } from "@/app/api/db/Art";
+import { fetchArtPromptsForUser, fetchArtContentForPrompt, getArtStyleById, getImageOrientationById } from "@/app/api/db/Art";
 import { generateSignedUrlFile } from "@/app/api/utils/gcp"
 
 export async function GET(request: NextRequest, response: NextResponse) {
@@ -34,6 +34,20 @@ export async function GET(request: NextRequest, response: NextResponse) {
                     const artPromptsAndContent = await Promise.all(fetchedArtPrompts.response.map(async (prompt: any, index: number) => {
                         const fetchedArtContentForPrompt = await fetchArtContentForPrompt(prompt.id);
 
+                        // Get art prompt content type lookup data
+                        const artStyleRes: any = await getArtStyleById(prompt.art_style);
+                        let finalArtStyle = prompt.art_style;
+                        if("response" in artStyleRes){
+                            finalArtStyle = artStyleRes.response[0];
+                        }
+
+                        // Get art prompt image orientation type lookup data
+                        const imageOrientationRes: any = await getImageOrientationById(prompt.orientation);
+                        let finalImageOrientation = prompt.orientation;
+                        if("response" in artStyleRes){
+                            finalImageOrientation = imageOrientationRes.response[0];
+                        }
+
                         // Get authenticated url for each generated image
                         let finalContent = null;
                         if ("response" in fetchedArtContentForPrompt) {
@@ -49,7 +63,11 @@ export async function GET(request: NextRequest, response: NextResponse) {
                         }
         
                         return {
-                            "prompt": prompt,
+                            "prompt": {
+                                ...prompt,
+                                "art_style": finalArtStyle,
+                                "orientation": finalImageOrientation
+                            },
                             "content": prompt.success === 1 ? finalContent : null
                         }
                     }));
