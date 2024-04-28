@@ -281,7 +281,6 @@ export const fetchArtContentForPrompt = async (promptId: string): Promise<any> =
         // Attempt to fetch art content for prompt
         const artContentForPrompt = await pool.query(getArtContentForPromptQuery);
         let success: boolean = false;
-        console.log(artContentForPrompt);
         if (artContentForPrompt.rowCount) {
             success = true;
             return { "response": artContentForPrompt.rows };

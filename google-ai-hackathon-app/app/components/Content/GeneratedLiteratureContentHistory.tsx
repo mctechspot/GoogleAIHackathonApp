@@ -8,7 +8,7 @@ import { IoIosWarning } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import { formatDateWithTime } from "@/app/utils/Dates"
 
-export default function GeneratedLiteratureContentHistory(response: GeneratedLiteratureHistoryListType) {
+export default function GeneratedLiteratureContentHistory({response}: GeneratedLiteratureHistoryListType) {
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
 
@@ -29,7 +29,7 @@ export default function GeneratedLiteratureContentHistory(response: GeneratedLit
     return (
         <>
             <div className={`grid grid-cols-1 gap-4`}>
-                {response.response.length === 0 ? (
+                {response.length === 0 ? (
                     <>
                         <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center`}>
                             You have not generated any literature content yet. &nbsp;
@@ -41,10 +41,10 @@ export default function GeneratedLiteratureContentHistory(response: GeneratedLit
                 ) :
                     (
                         <>
-                            {response.response.map((generatedContent: GeneratedLiteratureHistoryType, index: number) => {
+                            {response.map((generatedContent: GeneratedLiteratureHistoryType, index: number) => {
                                 return (
                                     <>
-                                        <Link href={`/my-content/literature/${generatedContent.prompt.id}`}
+                                        <Link key={index + 1}href={`/my-content/literature/${generatedContent.prompt.id}`}
                                             className={`border border-solid ${lightTheme ? ("border-green-text") : ("border-green-pale")} rounded p-5`}>
 
                                             <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>

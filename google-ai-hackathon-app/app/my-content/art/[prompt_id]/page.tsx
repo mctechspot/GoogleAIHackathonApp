@@ -4,27 +4,27 @@ import Link from "next/link";
 import Header from "@/app/components/Navigation/Header";
 import Footer from "@/app/components/Navigation/Footer";
 import { ThemeContext } from "@/app/components/Layouts/MainLayout"
-import GeneratedLiteratureContent from "@/app/components/Content/GeneratedLiteratureContent"
-import { GeneratedLiteratureContentType, ContentHistoryError } from "@/app/types/ContentHistory"
+import GeneratedArtContent from "@/app/components/Content/GeneratedArtContent"
+import { GeneratedArtContentType, ContentHistoryError } from "@/app/types/ContentHistory"
 import { MdError } from "react-icons/md";
 
-export default function LiteratureContentPage({ params }: { params: { prompt_id: string } }) {
+export default function ArtContentPage({ params }: { params: { prompt_id: string } }) {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
-    const [literatureContent, setLiteratureContent] = useState<GeneratedLiteratureContentType | ContentHistoryError | null>(null);
+    const [artContent, setArtContent] = useState<GeneratedArtContentType | ContentHistoryError | null>(null);
     const promptId: string = params.prompt_id;
 
     useEffect(() => {
-        fetchLiteratureContent();
+        fetchArtContent();
     }, []);
 
-    // Function to fetch literature content
-    const fetchLiteratureContent = async (): Promise<void> => {
+    // Function to fetch art content
+    const fetchArtContent = async (): Promise<void> => {
         try {
-            const literatureContentRes = await fetch(`/api/content-history/fetch-unique-literature-content/${promptId}`, {
+            const literatureContentRes = await fetch(`/api/content-history/fetch-unique-art-content/${promptId}`, {
                 "method": "GET"
             });
             const literatureContentJson = await literatureContentRes.json();
-            setLiteratureContent(literatureContentJson);
+            setArtContent(literatureContentJson);
         } catch (error: any) {
             console.log(`Error fetching literature content history: ${error.message}.`);
         }
@@ -41,11 +41,11 @@ export default function LiteratureContentPage({ params }: { params: { prompt_id:
 
                 <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
 
-                    {literatureContent ? (
-                        "response" in literatureContent ? (
+                    {artContent ? (
+                        "response" in artContent ? (
                             <>
                                 <div className={`fade-in`}>
-                                    <GeneratedLiteratureContent response={literatureContent.response} />
+                                    <GeneratedArtContent response={artContent.response} />
                                 </div>
                             </>
                         ) : (
@@ -54,7 +54,7 @@ export default function LiteratureContentPage({ params }: { params: { prompt_id:
                                                         ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>
                                     <div><MdError /></div>
                                     <p>
-                                        {literatureContent.error}
+                                        {artContent.error}
                                     </p>
                                 </div>
                             </>

@@ -12,8 +12,6 @@ export default function GeneratedArtContentHistory({ response }: GeneratedArtHis
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
 
-    console.log("jhjgg: ", response);
-
     const formatLiteratureContentPreview = (content: string): string => {
         let formattedContent: string = content;
         if (content.trim() !== "") {
@@ -100,13 +98,13 @@ export default function GeneratedArtContentHistory({ response }: GeneratedArtHis
                                                                 {generatedContent.content?.map((content: ArtContentType, index: number) => {
                                                                     return (
                                                                         <>
-                                                                            <div>
+                                                                            <div className={`relative`}>
                                                                                 <Image
                                                                                     src={content.image_path}
                                                                                     alt={`Image Prompt`}
                                                                                     height={"200"}
                                                                                     width={"200"}
-                                                                                    className={`rounded`}
+                                                                                    className={`bg-green-standard rounded`}
                                                                                 />
                                                                             </div>
                                                                         </>

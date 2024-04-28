@@ -3,37 +3,15 @@ import Image from "next/image"
 import Link from "next/link"
 import { RefObject, useContext, useEffect, useRef, useState } from "react"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout";
-import { GeneratedLiteratureContentType } from "@/app/types/ContentHistory"
+import { GeneratedArtContentType, ArtContentType } from "@/app/types/ContentHistory"
 import { IoIosWarning } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import { formatDateWithTime } from "@/app/utils/Dates"
 
-export default function GeneratedLiteratureContent(response: GeneratedLiteratureContentType) {
+export default function GeneratedArtContent(response: GeneratedArtContentType) {
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
-    const contentRef: RefObject<HTMLDivElement> | null = useRef(null);
-
-    const formatLiteratureContentPreview = (content: string) => {
-        const contentElement = contentRef?.current;
-        if (contentElement) {
-            let formattedContent: string = content;
-            if (content.trim() !== "") {
-                // Format content for html
-                // Replace "\n" line breaks with <br> tags
-                formattedContent = content.replaceAll(/\n/g, "<br>");
-
-                // Replace ** content ** to reflect <b>content</b> format
-                formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-            }
-            contentElement.innerHTML = formattedContent;
-        }
-    }
-
-    useEffect(() => {
-        if(response.response.content){
-            formatLiteratureContentPreview(response.response.content.content);
-        }
-    }, [])
+    //const contentRef: RefObject<HTMLDivElement> | null = useRef(null);
 
     return (
         <>
@@ -47,27 +25,22 @@ export default function GeneratedLiteratureContent(response: GeneratedLiterature
                     </>
                 ) : (
                     <>
-                        <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center font-black`}>Generated Literature</p><br />
+                        <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center font-black`}>Generated Art</p><br />
 
                         <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
                             <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Prompt &nbsp; &nbsp;</span>
                             {response.response.prompt.prompt}
                         </p>
 
-                        {response.response.prompt.image_path ? (
-                            <>
-                                <div className={`${lightTheme ? ("text-black") : ("text-white")}`}>
-                                    <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Image &nbsp; &nbsp;</span>
-                                    <Image
-                                        src={response.response.prompt.image_path}
-                                        alt={`Image Prompt`}
-                                        height={"200"}
-                                        width={"200"}
-                                    />
-                                </div>
-                            </>
-                        ) : ("")}
+                        <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
+                            <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Art Style &nbsp; &nbsp;</span>
+                            {response.response.prompt.art_style.style}
+                        </p>
 
+                        <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
+                            <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Orientation &nbsp; &nbsp;</span>
+                            {response.response.prompt.orientation.orientation}
+                        </p>
 
                         <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
                             <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Requested at &nbsp; &nbsp;</span>
@@ -79,10 +52,6 @@ export default function GeneratedLiteratureContent(response: GeneratedLiterature
                             {formatDateWithTime(response.response.prompt.response_timestamp)}
                         </p>
 
-                        <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
-                            <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Content Type &nbsp; &nbsp;</span>
-                            {response.response.prompt.content_type.content_type}
-                        </p>
 
                         {response.response.prompt.warning_or_error ? (
                             response.response.prompt.warning_or_error === 1 ? (
@@ -108,14 +77,28 @@ export default function GeneratedLiteratureContent(response: GeneratedLiterature
                             )
                         ) : (
                             <>
-                                <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
-                                    <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Content</span><br /><br />
-                                    {response.response.content ? (
-                                        <>
-                                            <div ref={contentRef}></div>
-                                        </>
-                                    ) : ("")}
-                                </p>
+                                {response.response.content ? (
+                                    <>
+                                        <p className={`text-green-text font-black`}>Content &nbsp; &nbsp;</p>
+                                        <div className={`grid grid-cols-3 gap-2 w-full max-[900px]:grid-cols-1`}>
+                                            {response.response.content.map((content: ArtContentType, index: number) => {
+                                                return (
+                                                    <>
+                                                        <div className={`relative`}>
+                                                            <Image
+                                                                src={content.image_path}
+                                                                alt={`Image Prompt`}
+                                                                height={"200"}
+                                                                width={"200"}
+                                                                className={`bg-green-standard rounded w-full`}
+                                                            />
+                                                        </div>
+                                                    </>
+                                                );
+                                            })}
+                                        </div>
+                                    </>
+                                ) : ("")}
                             </>
                         )
                         }
