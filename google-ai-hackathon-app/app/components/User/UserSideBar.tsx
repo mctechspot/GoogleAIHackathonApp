@@ -42,7 +42,7 @@ export default function UserSideBar() {
         <>
             {openUserSideBar ? (
                 <>
-                    <div className={`absolute ${lightTheme ? ("bg-white") : ("bg-green-dark")} z-10 top-0 bottom-0 border border-solid border-r-green-standard max-w-[250px]`}>
+                    <div className={`fixed ${lightTheme ? ("bg-white") : ("bg-green-dark")} z-10 top-0 bottom-0 border border-solid border-r-green-standard max-w-[250px]`}>
                         <div className={"p-5"}>
                             <div className={`flex justify-end text-xl font-black \
                                         cursor-pointer ${lightTheme ? ("text-green-dark") : ("text-green-standard")}`}
