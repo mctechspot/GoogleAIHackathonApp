@@ -18,7 +18,8 @@ import { ContentLookupDataProps, ContentLookupDataError } from "@/app/types/Cont
 import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import UserSideBar from "@/app/components/User/UserSideBar"
 import GeneratedLiteratureContentHistory from "@/app/components/Content/GeneratedLiteratureContentHistory"
-import { GeneratedLiteratureHistoryListType, ContentHistoryError } from "@/app/types/ContentHistory"
+import GeneratedArtContentHistory from "@/app/components/Content/GeneratedArtContentHistory"
+import { GeneratedLiteratureHistoryListType, GeneratedArtHistoryListType, ContentHistoryError } from "@/app/types/ContentHistory"
 
 export default function MyContentPage() {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
@@ -32,7 +33,7 @@ export default function MyContentPage() {
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>(null);
     const [contentCategory, setContentCategory] = useState<number>(1);
     const [literatureContentHistory, setLiteratureContentHistory] = useState<GeneratedLiteratureHistoryListType | ContentHistoryError | null>(null);
-    const [artContentHistory, setArtContentHistory] = useState<any>(null);
+    const [artContentHistory, setArtContentHistory] = useState<GeneratedArtHistoryListType | ContentHistoryError | null>(null);
 
     useEffect(() => {
         fetchLiteratureContent();
@@ -98,9 +99,11 @@ export default function MyContentPage() {
                                 </>
                             ) :
                                 (
-                                    <>
-
-                                    </>
+                                    "response" in artContentHistory ? (
+                                        <>
+                                        <GeneratedArtContentHistory response={artContentHistory.response} />
+                                        </>
+                                    ):("")
                                 )}
                         </>
                     ) : ("")}
