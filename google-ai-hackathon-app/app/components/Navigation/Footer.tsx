@@ -14,6 +14,8 @@ export default function Footer() {
                 <p>&copy; {currentYear > startYear ?  `${startYear} - ${currentYear}` : `${startYear}`} jenna </p>
                 <span>|</span>
                 <Link href={"/about"}>about</Link>
+                <span>|</span>
+                <Link href={"/responsible-ai"}>responsible ai</Link>
             </div>
         </>
     );
