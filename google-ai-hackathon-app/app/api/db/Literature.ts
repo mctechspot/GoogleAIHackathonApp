@@ -158,12 +158,12 @@ export const fetchLiteraturePromptsForUser = async (userId: string): Promise<any
     }
 }
 
-// Function to fetch literature prompts for a user
+// Function to fetch literature content for a prompt
 export const fetchLiteratureContentForPrompt = async (promptId: string): Promise<any> => {
     try {
         // Query to fetch literature content for prompt
         const getLiteratureContentForPromptQuery = {
-            name: "get-literature-content-for-user",
+            name: "get-literature-content-for-prompt",
             text: "SELECT * from generated_literature WHERE prompt = $1",
             values: [promptId]
         };

@@ -159,3 +159,57 @@ export const addGeneratedArtContent = async (
         return { "error": error.message };
     }
 }
+
+// Function to fetch art prompts for a user
+export const fetchArtPromptsForUser = async (userId: string): Promise<any> => {
+    try {
+
+        // Query to fetch art prompts for user
+        const getArtPromptsForUserQuery = {
+            name: "get-art-prompts-for-user",
+            text: "SELECT * from art_prompts where user_id = $1",
+            values: [userId]
+        };
+
+        // Attempt to fetch art prompts for user
+        const artPromptsForUser = await pool.query(getArtPromptsForUserQuery);
+        let success: boolean = false;
+        console.log(artPromptsForUser);
+        if (artPromptsForUser.rowCount) {
+            success = true;
+            return { "response": artPromptsForUser.rows };
+        }
+        return { "response": [] }
+
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting art prompts for user: ${error.message}`);
+        return { "error": error.message };
+    }
+}
+
+// Function to fetch art content for a prompt
+export const fetchArtContentForPrompt = async (promptId: string): Promise<any> => {
+    try {
+        // Query to fetch art content for prompt
+        const getArtContentForPromptQuery = {
+            name: "get-art-content-for-prompt",
+            text: "SELECT * from generated_art WHERE prompt = $1",
+            values: [promptId]
+        };
+
+        // Attempt to fetch art content for prompt
+        const artContentForPrompt = await pool.query(getArtContentForPromptQuery);
+        let success: boolean = false;
+        console.log(artContentForPrompt);
+        if (artContentForPrompt.rowCount) {
+            success = true;
+            return { "response": artContentForPrompt.rows };
+        }
+        return { "response": [] }
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting art content for prompt: ${error.message}`);
+        return { "error": error.message };
+    }
+}

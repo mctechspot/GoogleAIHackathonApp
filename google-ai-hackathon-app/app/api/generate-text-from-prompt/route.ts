@@ -25,6 +25,7 @@ export async function POST(request: NextRequest, response: NextResponse){
 
             // Get user Id for email decoded in next-auth sessiont token
             const userIdFromEmail = await getUserIdFromEmail(userData.email);
+            
             if("response" in userIdFromEmail){
                 userId = userIdFromEmail.response[0].id
             }
