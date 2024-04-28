@@ -38,7 +38,7 @@ export const generateSignedUrlFile = async (bucketName: string, filePath: string
         const options: any = {
             version: 'v4',
             action: 'read',
-            expires: Date.now() + 60 * 60 * 1000 * 15,
+            expires: Date.now() + 60 * 60 * 1000 * 30,
         };
 
         // Get a v4 signed URL for file at specified pathle
@@ -47,7 +47,7 @@ export const generateSignedUrlFile = async (bucketName: string, filePath: string
             .file(filePath)
             .getSignedUrl(options);
 
-        return { "url": url }
+        return { "url": url[0] }
 
     } catch (error: any) {
         console.log(`Error generating signed url file: ${error.message}.`)

@@ -17,6 +17,8 @@ import {
 import { ContentLookupDataProps, ContentLookupDataError } from "@/app/types/ContentLookupData"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import UserSideBar from "@/app/components/User/UserSideBar"
+import GeneratedLiteratureContentHistory from "@/app/components/Content/GeneratedLiteratureContentHistory"
+import { GeneratedLiteratureHistoryListType, ContentHistoryError } from "@/app/types/ContentHistory"
 
 export default function GenerateScreen() {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
@@ -29,12 +31,12 @@ export default function GenerateScreen() {
     const [contentGenerationRunning, setContentGenerationRunning] = useState<boolean>(false);
     const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>(null);
     const [contentCategory, setContentCategory] = useState<number>(1);
-    const [literatureContentHistory, setLiteratureContentHistory] = useState<any>(null);
+    const [literatureContentHistory, setLiteratureContentHistory] = useState<GeneratedLiteratureHistoryListType | ContentHistoryError | null>(null);
     const [artContentHistory, setArtContentHistory] = useState<any>(null);
 
     useEffect(() => {
         fetchLiteratureContent();
-        //fetchArtContent();
+        fetchArtContent();
     }, []);
 
     // Function to fetch literature content history
@@ -45,7 +47,6 @@ export default function GenerateScreen() {
             });
             const literatureContentHistoryJson = await literatureContentHistoryRes.json();
             setLiteratureContentHistory(literatureContentHistoryJson);
-            console.log(literatureContentHistoryJson);
         } catch (error: any) {
             console.log(`Error fetching literature content history: ${error.message}.`);
         }
@@ -75,7 +76,7 @@ export default function GenerateScreen() {
                 </div>
 
                 <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
-                    
+
                     <p className={`${lightTheme ? ("text-green-text") : ("text-white")} text-center font-black`}>My Content</p><br />
                     {/* Tab to switch between literary and art content history */}
                     <div className={`flex justify-center items-center gap-5 f-full`}>
@@ -84,6 +85,25 @@ export default function GenerateScreen() {
                         <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
                             onClick={() => setContentCategory(2)}>Art</div>
                     </div><br />
+
+                    {literatureContentHistory && artContentHistory ? (
+                        <>
+                            {contentCategory === 1 ? (
+                                <>
+                                    {"response" in literatureContentHistory ? (
+                                        <>
+                                            <GeneratedLiteratureContentHistory response={literatureContentHistory.response} />
+                                        </>
+                                    ) : ("")}
+                                </>
+                            ) :
+                                (
+                                    <>
+
+                                    </>
+                                )}
+                        </>
+                    ) : ("")}
 
                 </div>
 
