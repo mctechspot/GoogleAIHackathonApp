@@ -3,12 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useContext, useEffect, useState } from "react"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout";
-import {
-    LiteraturePromptsType,
-    LiteratureContentType,
-    GeneratedLiteratureHistoryListType,
-    GeneratedLiteratureHistoryType,
-} from "@/app/types/ContentHistory"
+import { GeneratedLiteratureHistoryListType, GeneratedLiteratureHistoryType } from "@/app/types/ContentHistory"
 import { IoIosWarning } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import { formatDateWithTime } from "@/app/utils/Dates"
@@ -49,7 +44,7 @@ export default function GeneratedLiteratureContentHistory(response: GeneratedLit
                             {response.response.map((generatedContent: GeneratedLiteratureHistoryType, index: number) => {
                                 return (
                                     <>
-                                        <Link href={`/my-content/${generatedContent.prompt.id}`}
+                                        <Link href={`/my-content/literature/${generatedContent.prompt.id}`}
                                             className={`border border-solid ${lightTheme ? ("border-green-text") : ("border-green-pale")} rounded p-5`}>
 
                                             <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>

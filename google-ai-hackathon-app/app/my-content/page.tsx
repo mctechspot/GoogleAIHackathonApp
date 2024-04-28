@@ -20,7 +20,7 @@ import UserSideBar from "@/app/components/User/UserSideBar"
 import GeneratedLiteratureContentHistory from "@/app/components/Content/GeneratedLiteratureContentHistory"
 import { GeneratedLiteratureHistoryListType, ContentHistoryError } from "@/app/types/ContentHistory"
 
-export default function GenerateScreen() {
+export default function MyContentPage() {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const [userPrompt, setUserPrompt] = useState<UserFormProps>({
         "prompt": "",

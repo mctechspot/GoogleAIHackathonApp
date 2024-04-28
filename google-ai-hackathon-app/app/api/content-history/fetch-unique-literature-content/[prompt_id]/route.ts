@@ -118,7 +118,7 @@ export async function GET(request: NextRequest, { params }: { params: { prompt_i
             });
         }
     } catch (error: any) {
-        console.log(`Error fetching literature content history: ${error.message}.`);
+        console.log(`Oops. There is an error on our server.`);
         return NextResponse.json({
             "error": error.message
         }, {

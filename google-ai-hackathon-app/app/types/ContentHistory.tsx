@@ -26,6 +26,13 @@ export type GeneratedLiteratureHistoryType = {
     content: LiteratureContentType | null;
 }
 
+export type GeneratedLiteratureContentType = {
+    response: {
+        prompt: LiteraturePromptsType;
+        content: LiteratureContentType | null;
+    }
+}
+
 export type GeneratedLiteratureHistoryListType = {
     response: GeneratedLiteratureHistoryType[];
 }
