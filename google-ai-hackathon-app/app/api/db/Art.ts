@@ -241,6 +241,33 @@ export const fetchArtPromptsForUser = async (userId: string): Promise<any> => {
     }
 }
 
+// Function to fetch art prompt by id
+export const fetchArtPromptById = async (promptId: string): Promise<any> => {
+    try {
+
+        // Query to fetch art prompt by id
+        const getArtPromptByIdQuery = {
+            name: "get-art-prompt-by-id",
+            text: "SELECT * from art_prompts where id = $1",
+            values: [promptId]
+        };
+
+        // Attempt to fetch art prompt by id
+        const artPromptById = await pool.query(getArtPromptByIdQuery);
+        let success: boolean = false;
+        if (artPromptById.rowCount) {
+            success = true;
+            return { "response": artPromptById.rows };
+        }
+        return { "response": [] }
+
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting art prompt by id: ${error.message}`);
+        return { "error": error.message };
+    }
+}
+
 // Function to fetch art content for a prompt
 export const fetchArtContentForPrompt = async (promptId: string): Promise<any> => {
     try {

@@ -186,6 +186,34 @@ export const fetchLiteraturePromptsForUser = async (userId: string): Promise<any
     }
 }
 
+// Function to fetch literature prompt by id
+export const fetchLiteraturePromptById= async (promptId: string): Promise<any> => {
+    try {
+
+        // Query to fetch literature prompt by id
+        const getLiteraturePromptById = {
+            name: "get-literature-prompt-by-id",
+            text: "SELECT * from literature_prompts where id = $1",
+            values: [promptId]
+        };
+
+        // Attempt to fetch literature prompt by id
+        const literaturePromptById = await pool.query(getLiteraturePromptById);
+        let success: boolean = false;
+        console.log(literaturePromptById);
+        if (literaturePromptById.rowCount) {
+            success = true;
+            return { "response": literaturePromptById.rows };
+        }
+        return { "response": [] }
+
+    } catch (error: any) {
+        // Return error
+        console.log(`Error getting literature prompt by id: ${error.message}`);
+        return { "error": error.message };
+    }
+}
+
 // Function to fetch literature content for a prompt
 export const fetchLiteratureContentForPrompt = async (promptId: string): Promise<any> => {
     try {

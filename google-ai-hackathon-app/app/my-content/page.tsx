@@ -40,7 +40,7 @@ export default function GenerateScreen() {
     // Function to fetch literature content history
     const fetchLiteratureContent = async (): Promise<void> => {
         try {
-            const literatureContentHistoryRes = await fetch(`/api/fetch-literature-content-history`, {
+            const literatureContentHistoryRes = await fetch(`/api/content-history/fetch-literature-content-history`, {
                 "method": "GET"
             });
             const literatureContentHistoryJson = await literatureContentHistoryRes.json();
@@ -54,7 +54,7 @@ export default function GenerateScreen() {
     // Function to fetch art content history
     const fetchArtContent = async (): Promise<void> => {
         try {
-            const artContentHistoryRes = await fetch(`/api/fetch-art-content-history`, {
+            const artContentHistoryRes = await fetch(`/api/content-history/fetch-art-content-history`, {
                 "method": "GET"
             });
             const artContentHistoryJson = await artContentHistoryRes.json();
