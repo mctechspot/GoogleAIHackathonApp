@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         }
 
         // Check cookies to see if next-auth session token exists
-        const cookieStore = cookies()
+        const cookieStore = cookies();
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
 
         // Get user credentials from next-auth session token if it exsists

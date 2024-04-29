@@ -13,6 +13,7 @@
     "@google-cloud/storage": "^7.10.1",
     "@google-cloud/vertexai": "^1.1.0",
     "@google/generative-ai": "^0.8.0",
+    "googleapis": "^135.0.0",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.45",
     "next": "14.2.2",
