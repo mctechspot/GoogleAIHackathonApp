@@ -19,8 +19,8 @@ export default function GeneratedLiteratureContentHistory({ response }: Generate
             // Replace "\n" line breaks with <br> tags
             formattedContent = content.replaceAll(/\n/g, "\n");
 
-            // Replace ** content ** to reflect <b>content</b> format
-            formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "$1:");
+            // Reformat ** content ** and ## conten to reflect <b>content</b> format
+            formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
         }
 
         return formattedContent.substring(0, 200) + "...";

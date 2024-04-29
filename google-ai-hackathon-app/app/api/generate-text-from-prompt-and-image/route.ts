@@ -28,6 +28,16 @@ export async function POST(request: NextRequest, response: NextResponse) {
             });
         }
 
+        let generatedContentJson: any = null;
+        // Check for image warnings and return bad request error if image is incompatible
+        const imageWarnings: string[] = checkImageCompatibility(rawImage);
+        if (imageWarnings.length > 0) {
+            generatedContentJson = { "warnings": [imageWarnings] };
+        } else {
+            // Generate content with text and image prompt
+            generatedContentJson = await generateTextFromTextAndImagePrompt(contentType, promptText, rawImage);
+        }
+
         // Check cookies to see if next-auth session token exists
         const cookieStore = cookies()
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
@@ -49,18 +59,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
             userData = null;
         }
 
-        let generatedContentJson: any = null;
-        // Check for image warnings and return bad request error if image is incompatible
-        const imageWarnings: string[] = checkImageCompatibility(rawImage);
-        if (imageWarnings.length > 0) {
-            generatedContentJson = { "warnings": [imageWarnings] };
-        } else {
-            // Generate content with text and image prompt
-            generatedContentJson = await generateTextFromTextAndImagePrompt(contentType, promptText, rawImage);
-        }
-
         // If there is a present Google session, save literature prompt and generated content to database
-        if (userData && userId !== "") {
+        if (userData && userId !== "" && "response" in generatedContentJson) {
             const promptId: string = uuidv7();
             const image = await getImageTmpPathFromFile(rawImage);
             const finalImage: string = `literature/${userId}/${promptId}/image_prompt/${rawImage.name}`;

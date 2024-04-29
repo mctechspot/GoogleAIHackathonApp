@@ -12,20 +12,6 @@ export default function GeneratedArtContentHistory({ response }: GeneratedArtHis
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
 
-    const formatLiteratureContentPreview = (content: string): string => {
-        let formattedContent: string = content;
-        if (content.trim() !== "") {
-            // Format content for html
-            // Replace "\n" line breaks with <br> tags
-            formattedContent = content.replaceAll(/\n/g, "\n");
-
-            // Replace ** content ** to reflect <b>content</b> format
-            formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "$1:");
-        }
-
-        return formattedContent.substring(0, 200) + "...";
-    }
-
     return (
         <>
             <div className={`grid grid-cols-1 gap-4`}>

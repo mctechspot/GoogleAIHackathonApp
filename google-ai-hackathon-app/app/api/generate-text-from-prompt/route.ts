@@ -20,6 +20,16 @@ export async function POST(request: NextRequest, response: NextResponse) {
             });
         }
 
+        // Get art style from database
+        const literatureContentTypeRes: any = await getLiteratureContentTypeById(payload.content_type)
+        let contentType: string = "story";
+        if ("response" in literatureContentTypeRes && literatureContentTypeRes.response.length > 0) {
+            contentType = literatureContentTypeRes.response[0].content_type.toLowerCase();
+        }
+
+        // Generate content with only text prompt
+        const generatedContentJson = await generateTextFromTextPrompt(contentType, payload.prompt);
+
         // Check cookies to see if next-auth session token exists
         const cookieStore = cookies()
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
@@ -43,19 +53,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
             userData = null;
         }
 
-        // Get art style from database
-        const literatureContentTypeRes: any = await getLiteratureContentTypeById(payload.content_type)
-        let contentType: string = "story";
-        if ("response" in literatureContentTypeRes && literatureContentTypeRes.response.length > 0) {
-            console.log(literatureContentTypeRes.response[0].content_type.toLowerCase());
-            contentType = literatureContentTypeRes.response[0].content_type.toLowerCase();
-        }
-
-        // Generate content with only text prompt
-        const generatedContentJson = await generateTextFromTextPrompt(contentType, payload.prompt);
-
         // If there is a present Google session, save literature prompt and generated content to database
-        if (userData && userId !== "") {
+        if (userData && userId !== "" && "response" in generatedContentJson) {
             const promptId: string = uuidv7();
             const finalPayload = {
                 ...payload,
@@ -69,6 +68,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             if ("prompt_id" in addLiteraturePromptRes) {
                 const addGeneratedLiteratureContentRes = await addGeneratedLiteratureContent(userId, promptId, payload, generatedContentJson);
             }
+
         }
 
         const status: number = "warnings" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;

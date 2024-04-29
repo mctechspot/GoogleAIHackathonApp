@@ -27,7 +27,7 @@ export default function About() {
 
                         <div className={`${lightTheme ? ("text-black") : ("text-white")} my-[50px]`}>
 
-                            <p className={"text-green-text text-lg font-black text-center"}>Jenna's Mission for Responsible AI</p><br />
+                            <p className={"text-green-text text-lg font-black text-center"}>Jenna&apos;s Mission for Responsible AI</p><br />
 
                             <p>
                                 Jenna is designed to leverage the power of Generative Artificial Intelligence

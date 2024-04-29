@@ -25,28 +25,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
             });
         }
 
-        // Check cookies to see if next-auth session token exists
-        const cookieStore = cookies();
-        const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
-
-        // Get user credentials from next-auth session token if it exsists
-        let userData: any = null;
-        let userId: string = "";
-        if (nextAuthSessionCookie !== undefined && nextAuthSessionCookie && "value" in nextAuthSessionCookie) {
-            userData = await decode({
-                token: nextAuthSessionCookie.value,
-                secret: process.env.NEXTAUTH_SECRET!,
-            });
-
-            // Get user Id for email decoded in next-auth sessiont token
-            const userIdFromEmail = await getUserIdFromEmail(userData.email);
-            if ("response" in userIdFromEmail) {
-                userId = userIdFromEmail.response[0].id
-            }
-        } else {
-            userData = null;
-        }
-
         // Get art style from database
         const artStyleRes: any = await getArtStyleById(payload.style)
         let artStyle: string = "1:1";
@@ -133,37 +111,57 @@ export async function POST(request: NextRequest, response: NextResponse) {
             }
         }
 
-        if (userData && userId !== "") {
+        // Check cookies to see if next-auth session token exists
+        const cookieStore = cookies();
+        const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
+
+        // Get user credentials from next-auth session token if it exsists
+        let userData: any = null;
+        let userId: string = "";
+        if (nextAuthSessionCookie !== undefined && nextAuthSessionCookie && "value" in nextAuthSessionCookie) {
+            userData = await decode({
+                token: nextAuthSessionCookie.value,
+                secret: process.env.NEXTAUTH_SECRET!,
+            });
+
+            // Get user Id for email decoded in next-auth sessiont token
+            const userIdFromEmail = await getUserIdFromEmail(userData.email);
+            if ("response" in userIdFromEmail) {
+                userId = userIdFromEmail.response[0].id
+            }
+        } else {
+            userData = null;
+        }
+
+        if (userData && userId !== "" && "response" in generationResponse) {
 
             // Initialise ID for content entry in database
             //const contentEntryUUID: string = uuidv7();
             const promptId: string = uuidv7();
             let finalGeneratedImagePaths: any = [];
 
-            if ("response" in generationResponse) {
-                // Convert base64 images to pngs and write to /tmp
-                const imagesWrittenToTmp = await Promise.all(generationResponse.response.map(async (base64String: string, index: number) => {
-                    return getImageTmpPathFromBase64String(base64String);
-                }));
+            // Convert base64 images to pngs and write to /tmp
+            const imagesWrittenToTmp = await Promise.all(generationResponse.response.map(async (base64String: string, index: number) => {
+                return getImageTmpPathFromBase64String(base64String);
+            }));
 
-                // Upload generated images stored in /tmp file to GCP cloud storage bucket
-                const imageUploadResults = imagesWrittenToTmp.forEach(async (image: any, index: number) => {
-                    if ("imageUUID" in image && "imageName" in image && "imagePath" in image) {
+            // Upload generated images stored in /tmp file to GCP cloud storage bucket
+            const imageUploadResults = imagesWrittenToTmp.forEach(async (image: any, index: number) => {
+                if ("imageUUID" in image && "imageName" in image && "imagePath" in image) {
 
-                        // Set unique destination file of image in GCP Cloud Storage bucket
-                        const destinationFilePath: string = `art/${userId}/${promptId}/images/${image.imageName}`;
-                        finalGeneratedImagePaths.push(destinationFilePath);
+                    // Set unique destination file of image in GCP Cloud Storage bucket
+                    const destinationFilePath: string = `art/${userId}/${promptId}/images/${image.imageName}`;
+                    finalGeneratedImagePaths.push(destinationFilePath);
 
-                        // upload file to GCP
-                        const uploadFileResult = await uploadFile(process.env.GCP_CONTENT_RESULTS_BUCKET!, image.imagePath, destinationFilePath);
+                    // upload file to GCP
+                    const uploadFileResult = await uploadFile(process.env.GCP_CONTENT_RESULTS_BUCKET!, image.imagePath, destinationFilePath);
 
-                        // Remove file from /tmp
-                        fs.unlinkSync(image.imagePath);
+                    // Remove file from /tmp
+                    fs.unlinkSync(image.imagePath);
 
-                        return uploadFileResult;
-                    }
-                });
-            }
+                    return uploadFileResult;
+                }
+            });
 
             const addArtPromptRes = await addArtPrompt(promptId, userId, requestTimestamp, payload, generationResponse);
 
@@ -179,6 +177,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 });
 
             }
+
         }
 
         const status: number = "warnings" in generationResponse ? 400 : "error" in generationResponse ? 500 : 200;
