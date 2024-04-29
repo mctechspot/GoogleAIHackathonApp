@@ -3,14 +3,16 @@ import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { uuidv7 } from "uuidv7";
 import { getUserIdFromEmail } from "@/app/api/db/Users"
-import { addLiteraturePrompt, addGeneratedLiteratureContent } from "@/app/api/db/Literature"
+import { addLiteraturePrompt, addGeneratedLiteratureContent, getLiteratureContentTypeById } from "@/app/api/db/Literature"
 import { getNowUtc } from "@/app/utils/Dates"
+import { generateTextFromTextPrompt } from "@/app/api/genAi/GenerativeAIFunctions"
 
-export async function POST(request: NextRequest, response: NextResponse){
-    try{
+export async function POST(request: NextRequest, response: NextResponse) {
+    try {
+        const request_timestamp: any = getNowUtc();
         const payload = await request.json();
 
-        if(payload.prompt.trim() === ""){
+        if (payload.prompt.trim() === "") {
             return NextResponse.json({
                 "input_error": "Prompt cannot be empty",
             }, {
@@ -33,29 +35,27 @@ export async function POST(request: NextRequest, response: NextResponse){
 
             // Get user Id for email decoded in next-auth sessiont token
             const userIdFromEmail = await getUserIdFromEmail(userData.email);
-            
-            if("response" in userIdFromEmail){
+
+            if ("response" in userIdFromEmail) {
                 userId = userIdFromEmail.response[0].id
             }
         } else {
             userData = null;
         }
 
-        // Call endpoint to generate text for prompt that uses solely text
-        const request_timestamp: any = getNowUtc();
-        const generatedContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-text`, {
-            "body": JSON.stringify(payload),
-            "method": "POST",
-            "headers": {
-                "Content-type": "application/json"
-            }
-        });
+        // Get art style from database
+        const literatureContentTypeRes: any = await getLiteratureContentTypeById(payload.content_type)
+        let contentType: string = "story";
+        if ("response" in literatureContentTypeRes && literatureContentTypeRes.response.length > 0) {
+            console.log(literatureContentTypeRes.response[0].content_type.toLowerCase());
+            contentType = literatureContentTypeRes.response[0].content_type.toLowerCase();
+        }
 
-        // Get json response for generated literature content
-        const generatedContentJson = await generatedContentRes.json();
+        // Generate content with only text prompt
+        const generatedContentJson = await generateTextFromTextPrompt(contentType, payload.prompt);
 
         // If there is a present Google session, save literature prompt and generated content to database
-        if (userData && userId !== ""){
+        if (userData && userId !== "") {
             const promptId: string = uuidv7();
             const finalPayload = {
                 ...payload,
@@ -64,18 +64,18 @@ export async function POST(request: NextRequest, response: NextResponse){
 
             // Save literature prompt to database
             const addLiteraturePromptRes = await addLiteraturePrompt(promptId, userId, request_timestamp, payload, generatedContentJson);
-            
+
             // Use generated id for literature prompt to save generated literature content in database
-            if("prompt_id" in addLiteraturePromptRes){
+            if ("prompt_id" in addLiteraturePromptRes) {
                 const addGeneratedLiteratureContentRes = await addGeneratedLiteratureContent(userId, promptId, payload, generatedContentJson);
             }
         }
 
-        const status: number = "warning" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
-        
-        return NextResponse.json(generatedContentJson, {status: status});
+        const status: number = "warnings" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
 
-    }catch(error: any){
+        return NextResponse.json(generatedContentJson, { status: status });
+
+    } catch (error: any) {
         console.log(`Error generating text content from prompt :${error.message}.`)
         return NextResponse.json({
             "error": error.message,

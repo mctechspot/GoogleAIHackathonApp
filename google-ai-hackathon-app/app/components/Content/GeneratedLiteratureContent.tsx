@@ -30,7 +30,7 @@ export default function GeneratedLiteratureContent(response: GeneratedLiterature
     }
 
     useEffect(() => {
-        if(response.response.content){
+        if (response.response.content) {
             formatLiteratureContentPreview(response.response.content.content);
         }
     }, [])
@@ -57,13 +57,16 @@ export default function GeneratedLiteratureContent(response: GeneratedLiterature
                         {response.response.prompt.image_path ? (
                             <>
                                 <div className={`${lightTheme ? ("text-black") : ("text-white")}`}>
-                                    <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Image &nbsp; &nbsp;</span>
-                                    <Image
-                                        src={response.response.prompt.image_path}
-                                        alt={`Image Prompt`}
-                                        height={"200"}
-                                        width={"200"}
-                                    />
+                                    <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Image &nbsp; &nbsp;</span><br />
+                                    <div className={`relative`}>
+                                        <Image
+                                            src={response.response.prompt.image_path}
+                                            alt={`Image Prompt`}
+                                            height={"200"}
+                                            width={"200"}
+                                            className={`bg-green-standard rounded`}
+                                        />
+                                    </div>
                                 </div>
                             </>
                         ) : ("")}

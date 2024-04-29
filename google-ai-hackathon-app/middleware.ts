@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // From my-content page, redirect to home page if user session is not present
-    if (request.nextUrl.pathname === "/my-content") {
+    if (request.nextUrl.pathname.startsWith("/my-content")) {
         const cookieStore = cookies();
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
 

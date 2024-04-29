@@ -8,7 +8,7 @@ import { IoIosWarning } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import { formatDateWithTime } from "@/app/utils/Dates"
 
-export default function GeneratedLiteratureContentHistory({response}: GeneratedLiteratureHistoryListType) {
+export default function GeneratedLiteratureContentHistory({ response }: GeneratedLiteratureHistoryListType) {
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
 
@@ -44,7 +44,7 @@ export default function GeneratedLiteratureContentHistory({response}: GeneratedL
                             {response.map((generatedContent: GeneratedLiteratureHistoryType, index: number) => {
                                 return (
                                     <>
-                                        <Link key={index + 1}href={`/my-content/literature/${generatedContent.prompt.id}`}
+                                        <Link key={index + 1} href={`/my-content/literature/${generatedContent.prompt.id}`}
                                             className={`border border-solid ${lightTheme ? ("border-green-text") : ("border-green-pale")} rounded p-5`}>
 
                                             <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
@@ -55,13 +55,16 @@ export default function GeneratedLiteratureContentHistory({response}: GeneratedL
                                             {generatedContent.prompt.image_path ? (
                                                 <>
                                                     <div className={`${lightTheme ? ("text-black") : ("text-white")}`}>
-                                                        <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Image &nbsp; &nbsp;</span>
-                                                        <Image
-                                                            src={generatedContent.prompt.image_path}
-                                                            alt={`Image Prompt`}
-                                                            height={"200"}
-                                                            width={"200"}
-                                                        />
+                                                        <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Image &nbsp; &nbsp;</span><br />
+                                                        <div className={`relative`}>
+                                                            <Image
+                                                                src={generatedContent.prompt.image_path}
+                                                                alt={`Image Prompt`}
+                                                                height={"200"}
+                                                                width={"200"}
+                                                                className={`bg-green-standard rounded`}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </>
                                             ) : ("")}

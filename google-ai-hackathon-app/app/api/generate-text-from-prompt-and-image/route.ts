@@ -5,18 +5,19 @@ import { uuidv7 } from "uuidv7";
 import { getUserIdFromEmail } from "@/app/api/db/Users"
 import { addLiteraturePrompt, addGeneratedLiteratureContent } from "@/app/api/db/Literature"
 import { getNowUtc } from "@/app/utils/Dates"
-import { getImageTmpPathFromFile } from "@/app/utils/Files"
+import { checkImageCompatibility, getImageTmpPathFromFile } from "@/app/utils/Files"
 import { uploadFile } from "@/app/api/utils/gcp";
+import { generateTextFromTextAndImagePrompt } from "@/app/api/genAi/GenerativeAIFunctions"
 import fs from "fs";
 
 export async function POST(request: NextRequest, response: NextResponse) {
     try {
+        const request_timestamp: any = getNowUtc();
         const payload = await request.formData();
 
         const rawImage: File = payload.get("image") as unknown as File;
         const promptText: string = payload.get("prompt") as unknown as string;
         const contentType: string = payload.get("content_type") as unknown as string;
-
 
         // Return bad request response for empty prompt
         if (promptText.trim() === "") {
@@ -48,15 +49,15 @@ export async function POST(request: NextRequest, response: NextResponse) {
             userData = null;
         }
 
-        // Call endpoint to generate text for prompt that uses both text prompt and image
-        const request_timestamp: any = getNowUtc();
-        const generatedContentRes = await fetch(`${process.env.FASTAPI_ENDPOINT}/generate-text-from-image`, {
-            "body": payload,
-            "method": "POST"
-        });
-
-        // If there is a present Google session, save literature prompt and generated content to database
-        const generatedContentJson = await generatedContentRes.json();
+        let generatedContentJson: any = null;
+        // Check for image warnings and return bad request error if image is incompatible
+        const imageWarnings: string[] = checkImageCompatibility(rawImage);
+        if (imageWarnings.length > 0) {
+            generatedContentJson = { "warnings": [imageWarnings] };
+        } else {
+            // Generate content with text and image prompt
+            generatedContentJson = await generateTextFromTextAndImagePrompt(contentType, promptText, rawImage);
+        }
 
         // If there is a present Google session, save literature prompt and generated content to database
         if (userData && userId !== "") {
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             }
         }
 
-        const status: number = "warning" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
+        const status: number = "warnings" in generatedContentJson ? 400 : "error" in generatedContentJson ? 500 : 200;
 
         return NextResponse.json(generatedContentJson, { status: status });
 

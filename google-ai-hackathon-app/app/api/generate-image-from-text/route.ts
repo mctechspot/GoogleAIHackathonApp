@@ -51,7 +51,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
         const artStyleRes: any = await getArtStyleById(payload.style)
         let artStyle: string = "1:1";
         if ("response" in artStyleRes && artStyleRes.response.length > 0) {
-            console.log(artStyleRes.response[0].style.toLowerCase());
             artStyle = artStyleRes.response[0].style.toLowerCase();
         }
 
@@ -59,7 +58,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
         const imageOrientationsRes: any = await getImageOrientationById(payload.orientation)
         let ratio: string = "1:1";
         if ("response" in imageOrientationsRes && imageOrientationsRes.response.length > 0) {
-            console.log(imageOrientationsRes.response[0].ratio.toLowerCase());
             ratio = imageOrientationsRes.response[0].ratio.toLowerCase();
         }
 
@@ -183,7 +181,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             }
         }
 
-        const status: number = "warning" in generationResponse ? 400 : "error" in generationResponse ? 500 : 200;
+        const status: number = "warnings" in generationResponse ? 400 : "error" in generationResponse ? 500 : 200;
 
         return NextResponse.json(generationResponse, { status: status });
 
