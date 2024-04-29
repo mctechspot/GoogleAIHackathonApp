@@ -221,7 +221,7 @@ export const fetchArtPromptsForUser = async (userId: string): Promise<any> => {
         // Query to fetch art prompts for user
         const getArtPromptsForUserQuery = {
             name: "get-art-prompts-for-user",
-            text: "SELECT * from art_prompts where user_id = $1",
+            text: "SELECT * from art_prompts where user_id = $1 ORDER BY request_timestamp DESC",
             values: [userId]
         };
 

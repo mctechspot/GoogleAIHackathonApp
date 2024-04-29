@@ -165,7 +165,7 @@ export const fetchLiteraturePromptsForUser = async (userId: string): Promise<any
         // Query to fetch literature prompts for user
         const getLiteraturePromptsForUserQuery = {
             name: "get-literature-prompts-for-user",
-            text: "SELECT * from literature_prompts where user_id = $1",
+            text: "SELECT * from literature_prompts where user_id = $1 ORDER BY request_timestamp DESC",
             values: [userId]
         };
 

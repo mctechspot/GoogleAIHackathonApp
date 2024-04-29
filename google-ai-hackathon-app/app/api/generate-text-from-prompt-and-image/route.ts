@@ -13,6 +13,20 @@ export async function POST(request: NextRequest, response: NextResponse) {
     try {
         const payload = await request.formData();
 
+        const rawImage: File = payload.get("image") as unknown as File;
+        const promptText: string = payload.get("prompt") as unknown as string;
+        const contentType: string = payload.get("content_type") as unknown as string;
+
+
+        // Return bad request response for empty prompt
+        if (promptText.trim() === "") {
+            return NextResponse.json({
+                "input_error": "Prompt cannot be empty",
+            }, {
+                status: 400
+            });
+        }
+
         // Check cookies to see if next-auth session token exists
         const cookieStore = cookies()
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
@@ -47,9 +61,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
         // If there is a present Google session, save literature prompt and generated content to database
         if (userData && userId !== "") {
             const promptId: string = uuidv7();
-            const rawImage: File = payload.get("image") as unknown as File;
-            const promptText: string = payload.get("prompt") as unknown as string;
-            const contentType: string = payload.get("content_type") as unknown as string;
             const image = await getImageTmpPathFromFile(rawImage);
             const finalImage: string = `literature/${userId}/${promptId}/image_prompt/${rawImage.name}`;
 
@@ -61,7 +72,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
                 // upload file to GCP
                 const uploadFileResult = await uploadFile(process.env.GCP_CONTENT_RESULTS_BUCKET!, image.imagePath, destinationFilePath);
-                
+
                 // Remove file from /tmp
                 fs.unlinkSync(image.imagePath);
             }
@@ -74,7 +85,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
             // Save literature prompt to database
             const addLiteraturePromptRes = await addLiteraturePrompt(promptId, userId, request_timestamp, payloadAsJson, generatedContentJson);
-            
+
             // Use generated id for literature prompt to save generated literature content in database
             if ("prompt_id" in addLiteraturePromptRes) {
                 const addGeneratedLiteratureContentRes = await addGeneratedLiteratureContent(userId, addLiteraturePromptRes.prompt_id, payload, generatedContentJson);

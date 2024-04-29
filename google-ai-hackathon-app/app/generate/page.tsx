@@ -10,6 +10,7 @@ import GeneratedContent from "@/app/components/Content/GeneratedContent";
 import { UserFormProps, UserFormType } from "@/app/types/Forms";
 import {
     GeneratedContentError,
+    GeneratedContentInputError,
     GeneratedLiteratureContentSuccess,
     GeneratedArtContentSuccess,
     GeneratedContentWarnings
@@ -27,7 +28,7 @@ export default function GenerateScreen() {
         "orientation": "1"
     });
     const [contentGenerationRunning, setContentGenerationRunning] = useState<boolean>(false);
-    const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>(null);
+    const [generatedContent, setGeneratedContent] = useState<GeneratedContentError | GeneratedContentInputError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>(null);
     const [contentCategory, setContentCategory] = useState<number>(1);
     const [contentLookupData, setContentLookupData] = useState<ContentLookupDataProps | ContentLookupDataError | null>(null);
 
@@ -71,6 +72,8 @@ export default function GenerateScreen() {
                                 <div>
 
                                     <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
+
+                                        <p className={`${lightTheme ? ("text-black"):("text-white")} text-center font-black`}>Generate Content</p><br />
 
                                         {/* Tab to switch between literary and art content generators */}
                                         <div className={`flex justify-center items-center gap-5 f-full`}>

@@ -1,6 +1,7 @@
 import { SetStateAction } from "react";
 import { 
-    GeneratedContentError, 
+    GeneratedContentError,
+    GeneratedContentInputError, 
     GeneratedLiteratureContentSuccess, 
     GeneratedArtContentSuccess, 
     GeneratedContentWarnings 
@@ -31,8 +32,8 @@ export type CompleteUserFormType = {
     setUserPrompt: React.Dispatch<SetStateAction<UserFormProps>>;
     contentGenerationRunning:boolean;
     setContentGenerationRunning: React.Dispatch<SetStateAction<boolean>>;
-    generatedContent: GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null;
-    setGeneratedContent: React.Dispatch<SetStateAction<GeneratedContentError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>>;
+    generatedContent: GeneratedContentError | GeneratedContentInputError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null;
+    setGeneratedContent: React.Dispatch<SetStateAction<GeneratedContentError | GeneratedContentInputError | GeneratedLiteratureContentSuccess | GeneratedArtContentSuccess | GeneratedContentWarnings | null>>;
     contentCategory: number;
     contentLookupData: ContentLookupDataProps;
 }

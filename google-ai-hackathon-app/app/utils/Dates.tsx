@@ -15,5 +15,5 @@ export const getGivenDate = (dateString: string) => {
 
 export const formatDateWithTime = (date: any) =>{
   date = getGivenDate(date);
-  return date.format('MMMM DD, YYYY HH:mm');
+  return date.format('MMMM DD, YYYY HH:mm:ss');
 }

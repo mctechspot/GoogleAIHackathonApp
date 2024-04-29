@@ -2,6 +2,10 @@ export type GeneratedContentError = {
     error: string;
 }
 
+export type GeneratedContentInputError = {
+    input_error: string;
+}
+
 export type GeneratedLiteratureContentSuccess = {
     response_text: string;
     timestamp: number;

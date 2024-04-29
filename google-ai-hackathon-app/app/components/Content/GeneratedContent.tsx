@@ -181,6 +181,18 @@ export default function GeneratedContent(
                             </>
                         ) : ("")}
 
+                        {/* Display input error response */}
+                        {"input_error" in generatedContent ? (
+                            <>
+                                <div className={"m-2"}>
+                                    <div className={`flex justify-center text-center text-[50px] ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>
+                                        <MdError />
+                                    </div><br />
+                                    <p className={`text-center ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>{generatedContent.input_error}</p><br />
+                                </div>
+                            </>
+                        ) : ("")}
+
                     </>
                 ) : ("")}
             </div>

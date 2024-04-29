@@ -10,6 +10,14 @@ export async function POST(request: NextRequest, response: NextResponse){
     try{
         const payload = await request.json();
 
+        if(payload.prompt.trim() === ""){
+            return NextResponse.json({
+                "input_error": "Prompt cannot be empty",
+            }, {
+                status: 400
+            });
+        }
+
         // Check cookies to see if next-auth session token exists
         const cookieStore = cookies()
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');

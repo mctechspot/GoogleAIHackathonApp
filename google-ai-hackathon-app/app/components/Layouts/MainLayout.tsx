@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import contextProvider, { createContext, useContext, useEffect, useState } from "react"
 import ThemeToggle from "@/app/components/Toggles/ThemeToggle"
 import UserSideBar from "@/app/components/User/UserSideBar"
@@ -22,7 +23,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             setLightTheme(true);
         }
     }
-    
+
     // Update theme in  local starge when lightTheme state variable changes
     const updateThemeInLocalStorage = () => {
         if (lightTheme) {
@@ -33,7 +34,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
 
     useEffect(() => {
-        if(lightTheme !== null){
+        if (lightTheme !== null) {
             updateThemeInLocalStorage();
         }
     }, [lightTheme]);
