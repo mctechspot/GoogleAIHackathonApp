@@ -22,7 +22,7 @@ export default function GeneratedLiteratureContent(response: GeneratedLiterature
                 // Replace "\n" line breaks with <br> tags
                 formattedContent = content.replaceAll(/\n/g, "<br>");
 
-                // Reformat ** content ** and ## conten to reflect <b>content</b> format
+                // Reformat ** content ** and ## content to reflect <b>content</b> format
                 formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
             }
             contentElement.innerHTML = formattedContent;

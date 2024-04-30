@@ -67,3 +67,4 @@ export const checkImageCompatibility = (image: File) => {
 
     return warnings;
 }
+
