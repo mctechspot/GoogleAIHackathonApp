@@ -39,7 +39,7 @@ jobs:
       # Build and tag docker image
       - name: Build and Tag docker image
         env:
-          DOCKER_BUILD_CONTEXT: ./${{ secrets.REPO_NAME}}
+          DOCKER_BUILD_CONTEXT: ./${{ secrets.DOCKER_BUILD_CONTEXT}}
           DOCKER_IMAGE_NAME: gcr.io/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}:${{ github.sha }}
         run: |
           docker build --tag ${{ env.DOCKER_IMAGE_NAME }} ${{ env.DOCKER_BUILD_CONTEXT }}
