@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { getUserIdFromEmail } from "@/app/api/db/Users";
 import { fetchArtPromptById, fetchArtContentForPrompt, getArtStyleById, getImageOrientationById } from "@/app/api/db/Art";
 import { generateSignedUrlFile } from "@/app/api/utils/gcp"
 import { validUUIDv7 } from "@/app/utils/DataValidation"
+import { getCookieData } from "@/app/api/cookies/cookies"
 
 export async function GET(request: NextRequest, { params }: { params: { prompt_id: string } }) {
     try {
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest, { params }: { params: { prompt_i
         }
 
         // Check cookies to see if next-auth session token exists
-        const cookieStore = cookies()
+        const cookieStore: any = await getCookieData();
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
 
         // Get user credentials from next-auth session token if it exsists

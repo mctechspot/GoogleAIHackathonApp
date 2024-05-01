@@ -1,14 +1,16 @@
+'use server'
+
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { getUserIdFromEmail } from "@/app/api/db/Users";
 import { fetchArtPromptsForUser, fetchArtContentForPrompt, getArtStyleById, getImageOrientationById } from "@/app/api/db/Art";
 import { generateSignedUrlFile } from "@/app/api/utils/gcp"
+import { getCookieData } from "@/app/api/cookies/cookies"
 
 export async function GET(request: NextRequest, response: NextResponse) {
     try {
         // Check cookies to see if next-auth session token exists
-        const cookieStore = cookies()
+        const cookieStore: any = await getCookieData();
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
 
         // Get user credentials from next-auth session token if it exsists

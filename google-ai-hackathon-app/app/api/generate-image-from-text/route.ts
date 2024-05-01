@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import { google } from 'googleapis';
-import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import fs from 'fs'
 import { uuidv7 } from "uuidv7";
@@ -11,6 +10,7 @@ import { getImageTmpPathFromBase64String } from "@/app/utils/Files";
 import { addArtPrompt, addGeneratedArtContent } from "@/app/api/db/Art"
 import { getArtStyleById, getImageOrientationById } from "@/app/api/db/Art"
 import { base64ToJSON } from "@/app/utils/DataParsing"
+import { getCookieData } from "@/app/api/cookies/cookies"
 
 export async function POST(request: NextRequest, response: NextResponse) {
     try {
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         }
 
         // Check cookies to see if next-auth session token exists
-        const cookieStore = cookies();
+        const cookieStore: any = await getCookieData();
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
 
         // Get user credentials from next-auth session token if it exsists
