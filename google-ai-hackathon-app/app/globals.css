@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+    --green-standard: #ABDEC9;
+    --green-dark: #2B4038;
+}
+
+input::file-selector-button {
+    background-color: var(--green-standard);
+    border: none;
+    border-radius: 5px;
+    color: var(--green-dark);
+    cursor: pointer;
+    font-weight: 900;
+    padding: 10px;
+}
+
+.page-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+}
+
+.spin {
+    animation: spin 1.0s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
