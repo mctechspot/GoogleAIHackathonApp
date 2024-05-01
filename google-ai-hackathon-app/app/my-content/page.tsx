@@ -1,6 +1,5 @@
 "use client"
 import { useContext, useEffect, useState } from "react"
-import { useSession, signIn, signOut } from 'next-auth/react';
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/app/components/Navigation/Header";
@@ -16,7 +15,6 @@ import {
 } from "@/app/types/Response";
 import { ContentLookupDataProps, ContentLookupDataError } from "@/app/types/ContentLookupData"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout"
-import UserSideBar from "@/app/components/User/UserSideBar"
 import LoadSpinner from "@/app/components/Loaders/LoadSpinner"
 import GeneratedLiteratureContentHistory from "@/app/components/Content/GeneratedLiteratureContentHistory"
 import GeneratedArtContentHistory from "@/app/components/Content/GeneratedArtContentHistory"

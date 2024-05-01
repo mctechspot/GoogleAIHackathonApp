@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { uuidv7 } from "uuidv7";
 import { getUserIdFromEmail } from "@/app/api/db/Users"
@@ -9,6 +8,7 @@ import { checkImageCompatibility, getImageTmpPathFromFile } from "@/app/utils/Fi
 import { uploadFile } from "@/app/api/utils/gcp";
 import { generateTextFromTextAndImagePrompt } from "@/app/api/genAi/GenerativeAIFunctions"
 import fs from "fs";
+import { getCookieData } from "@/app/api/cookies/cookies"
 
 export async function POST(request: NextRequest, response: NextResponse) {
     try {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         }
 
         // Check cookies to see if next-auth session token exists
-        const cookieStore = cookies()
+        const cookieStore: any = await getCookieData();
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
 
         // Get user credentials from next-auth session token if it exsists

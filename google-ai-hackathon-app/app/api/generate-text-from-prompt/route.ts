@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { uuidv7 } from "uuidv7";
 import { getUserIdFromEmail } from "@/app/api/db/Users"
 import { addLiteraturePrompt, addGeneratedLiteratureContent, getLiteratureContentTypeById } from "@/app/api/db/Literature"
 import { getNowUtc } from "@/app/utils/Dates"
 import { generateTextFromTextPrompt } from "@/app/api/genAi/GenerativeAIFunctions"
+import { getCookieData } from "@/app/api/cookies/cookies"
 
 export async function POST(request: NextRequest, response: NextResponse) {
     try {
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         const generatedContentJson = await generateTextFromTextPrompt(contentType, payload.prompt);
 
         // Check cookies to see if next-auth session token exists
-        const cookieStore = cookies()
+        const cookieStore: any = await getCookieData();
         const nextAuthSessionCookie: any = cookieStore.get('next-auth.session-token');
 
         // Get user credentials from next-auth session token if it exsists
