@@ -12,7 +12,9 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt,
     const [openDropdown, setOpenDropdown] = useState<boolean>(false);
     const dropdownRef: RefObject<HTMLDivElement> | null = useRef(null);
     const [dropdownData, setDropdownData] = useState<any[]>(contentLookupData.literature_content_types);
+    const [selectedDropdownDisplayValue, setSelectedDropdownDisplayValue] = useState<any>(contentLookupData.literature_content_types[0].value);
 
+    console.log(dropdownData);
     useEffect(() => {
         window.addEventListener('click', toggleDropdown);
         return () => {
@@ -31,11 +33,13 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt,
     useEffect(() => {
         // Reset dropdown values and user prompt content_type values upon toggle between literature and art 
         if (contentCategory === 1) {
+            setSelectedDropdownDisplayValue(contentLookupData.literature_content_types[0].value);
+            setUserPrompt({...userPrompt, content_type: contentLookupData.literature_content_types[0].key});
             setDropdownData(contentLookupData.literature_content_types);
-            setUserPrompt({...userPrompt, content_type: contentLookupData.literature_content_types[0].key})
         } else {
-            setDropdownData(contentLookupData.art_styles);
+            setSelectedDropdownDisplayValue(contentLookupData.art_styles[0].value);
             setUserPrompt({...userPrompt, content_type: contentLookupData.art_styles[0].key})
+            setDropdownData(contentLookupData.art_styles);
         }
     }, [contentCategory]);
 
@@ -51,7 +55,7 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt,
                     <div>
                         <div className={"flex items-center justify-center gap-2"}>
                             <div className={`${lightTheme ? ("text-green-dark") : ("text-white")}`}>
-                                {dropdownData.find((dropdownDataEntry: ContentDropdownProps, index: number) => dropdownDataEntry.key === userPrompt.content_type).value}
+                                {selectedDropdownDisplayValue}
                             </div>
                             <div className={"text-green-text"}>
                                 {openDropdown ? <FaChevronUp /> : <FaChevronDown />}
@@ -72,6 +76,7 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt,
                                             className={`${userPrompt.content_type === dropdownDataEntry.key ? (`bg-green-standard`) : (lightTheme ? ("text-green-dark") : ("text-white"))}
                                      hover:bg-green-standard hover:text-green-dark w-full py-2 px-10 w-full cursor-pointer`}
                                             onClick={() => {
+                                                setSelectedDropdownDisplayValue(dropdownDataEntry.value);
                                                 setUserPrompt({ ...userPrompt, content_type: dropdownDataEntry.key });
                                                 setOpenDropdown(false);
                                             }}>

@@ -25,7 +25,7 @@ export default function Error404Page() {
                 flex justify-center items-center text-[80px]`}>
                             <MdError />
                         </div>
-                        <p>Oops! An error ha occurred.</p><br />
+                        <p>Oops! An error has occurred.</p><br />
                         <p>Let&apos;s take you back to the &nbsp; <br />
                             <Link href={"/generate"} className={"text-green-text font-black"}>Generate Content</Link>
                             &nbsp; page.

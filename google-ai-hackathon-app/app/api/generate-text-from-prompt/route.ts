@@ -28,7 +28,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             }
         }
 
-        // Get art style from database
+        // Get content type from database
         const literatureContentTypeRes: any = await getLiteratureContentTypeById(payload.content_type)
         let contentType: string = "story";
         if ("response" in literatureContentTypeRes && literatureContentTypeRes.response.length > 0) {

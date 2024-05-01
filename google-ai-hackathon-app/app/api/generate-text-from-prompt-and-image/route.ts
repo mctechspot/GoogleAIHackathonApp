@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt';
 import { uuidv7 } from "uuidv7";
 import { getUserIdFromEmail } from "@/app/api/db/Users"
-import { addLiteraturePrompt, addGeneratedLiteratureContent } from "@/app/api/db/Literature"
+import { addLiteraturePrompt, addGeneratedLiteratureContent, getLiteratureContentTypeById } from "@/app/api/db/Literature"
 import { getNowUtc } from "@/app/utils/Dates"
 import { checkImageCompatibility, getImageTmpPathFromFile } from "@/app/utils/Files"
 import { uploadFile } from "@/app/api/utils/gcp";
@@ -36,6 +36,13 @@ export async function POST(request: NextRequest, response: NextResponse) {
             }
         }
 
+        // Get content type from database
+        const literatureContentTypeRes: any = await getLiteratureContentTypeById(contentType)
+        let contentTypeFinal: string = "story";
+        if ("response" in literatureContentTypeRes && literatureContentTypeRes.response.length > 0) {
+            contentTypeFinal = literatureContentTypeRes.response[0].content_type.toLowerCase();
+        }
+
         let generatedContentJson: any = null;
         // Check for image warnings and return bad request error if image is incompatible
         const imageWarnings: string[] = checkImageCompatibility(rawImage);
@@ -43,7 +50,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             generatedContentJson = { "warnings": [imageWarnings] };
         } else {
             // Generate content with text and image prompt
-            generatedContentJson = await generateTextFromTextAndImagePrompt(contentType, promptText, rawImage);
+            generatedContentJson = await generateTextFromTextAndImagePrompt(contentTypeFinal, promptText, rawImage);
         }
 
         // Check cookies to see if next-auth session token exists
