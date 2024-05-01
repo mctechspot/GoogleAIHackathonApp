@@ -17,6 +17,7 @@ import {
 import { ContentLookupDataProps, ContentLookupDataError } from "@/app/types/ContentLookupData"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import UserSideBar from "@/app/components/User/UserSideBar"
+import LoadSpinner from "@/app/components/Loaders/LoadSpinner"
 import GeneratedLiteratureContentHistory from "@/app/components/Content/GeneratedLiteratureContentHistory"
 import GeneratedArtContentHistory from "@/app/components/Content/GeneratedArtContentHistory"
 import { GeneratedLiteratureHistoryListType, GeneratedArtHistoryListType, ContentHistoryError } from "@/app/types/ContentHistory"
@@ -77,18 +78,19 @@ export default function MyContentPage() {
                 </div>
 
                 <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
-
-                    <p className={`${lightTheme ? ("text-green-text") : ("text-white")} text-center font-black`}>My Content</p><br />
-                    {/* Tab to switch between literary and art content history */}
-                    <div className={`flex justify-center items-center gap-5 f-full`}>
-                        <div className={`${contentCategory === 1 ? (`bg-green-standard text-green-dark`) : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
-                            onClick={() => setContentCategory(1)}>Literature</div>
-                        <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
-                            onClick={() => setContentCategory(2)}>Art</div>
-                    </div><br />
+                
+                <p className={`${lightTheme ? ("text-green-text") : ("text-white")} text-center font-black`}>My Content</p><br />
 
                     {literatureContentHistory && artContentHistory ? (
                         <>
+                            {/* Tab to switch between literary and art content history */}
+                            <div className={`flex justify-center items-center gap-5 f-full`}>
+                                <div className={`${contentCategory === 1 ? (`bg-green-standard text-green-dark`) : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
+                                    onClick={() => setContentCategory(1)}>Literature</div>
+                                <div className={`${contentCategory !== 1 ? ("bg-green-standard") : (lightTheme ? ("text-green-dark") : ("text-white"))} font-black p-2 rounded cursor-pointer`}
+                                    onClick={() => setContentCategory(2)}>Art</div>
+                            </div><br />
+
                             {contentCategory === 1 ? (
                                 <>
                                     {"response" in literatureContentHistory ? (
@@ -101,12 +103,16 @@ export default function MyContentPage() {
                                 (
                                     "response" in artContentHistory ? (
                                         <>
-                                        <GeneratedArtContentHistory response={artContentHistory.response} />
+                                            <GeneratedArtContentHistory response={artContentHistory.response} />
                                         </>
-                                    ):("")
+                                    ) : ("")
                                 )}
                         </>
-                    ) : ("")}
+                    ) : (
+                        <>
+                            <LoadSpinner />
+                        </>
+                    )}
 
                 </div>
 

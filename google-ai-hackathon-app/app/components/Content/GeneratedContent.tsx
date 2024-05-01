@@ -8,6 +8,7 @@ import { FaClipboardCheck, FaRegClipboard } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import GeneratedArtGrid from "@/app/components/Content/GeneratedArtGrid"
+import LoadSpinner from "@/app/components/Loaders/LoadSpinner"
 
 export default function GeneratedContent(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
@@ -102,9 +103,7 @@ export default function GeneratedContent(
                         <div className={"flex justify-center items-center"}>
                             <div>
                                 <p className={"text-center text-green-text font-black"}>Hang tight while we generate your content.</p><br />
-                                <div className={"flex justify-center items-center text-green-standard"}>
-                                    <CgSpinner className={"spin text-[100px]"} />
-                                </div>
+                                <LoadSpinner />
                             </div>
                         </div>
                     </>

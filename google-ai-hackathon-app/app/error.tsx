@@ -26,7 +26,7 @@ export default function Error404Page() {
                             <MdError />
                         </div>
                         <p>Oops! An error ha occurred.</p><br />
-                        <p>Let's take you back to the &nbsp; <br />
+                        <p>Let&apos;s take you back to the &nbsp; <br />
                             <Link href={"/generate"} className={"text-green-text font-black"}>Generate Content</Link>
                             &nbsp; page.
                         </p>

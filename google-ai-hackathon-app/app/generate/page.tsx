@@ -18,6 +18,7 @@ import {
 import { ContentLookupDataProps, ContentLookupDataError } from "@/app/types/ContentLookupData"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import UserSideBar from "@/app/components/User/UserSideBar"
+import LoadSpinner from "@/app/components/Loaders/LoadSpinner"
 
 export default function GenerateScreen() {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
@@ -43,8 +44,9 @@ export default function GenerateScreen() {
                 "method": "GET"
             });
             const contentLookupDataJson = await contentLookupDataRes.json();
-            if(!("error" in contentLookupDataJson)){
-                setUserPrompt({...userPrompt, 
+            if (!("error" in contentLookupDataJson)) {
+                setUserPrompt({
+                    ...userPrompt,
                     content_type: contentLookupDataJson.literature_content_types[0].key,
                     orientation: contentLookupDataJson.image_orientations[0].key
                 })
@@ -63,17 +65,18 @@ export default function GenerateScreen() {
                 <div>
                     <Header />
                 </div>
+                <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
 
-                {contentLookupData ? (
+                    <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center font-black`}>Generate Content</p><br />
 
-                    !("error" in contentLookupData) ? (
-                        <>
-                            <div>
+
+                    {contentLookupData ? (
+
+                        !("error" in contentLookupData) ? (
+                            <>
                                 <div>
+                                    <div>
 
-                                    <div className={"mx-20 mb-5 max-[450px]:mx-10 fade-in"}>
-
-                                        <p className={`${lightTheme ? ("text-black"):("text-white")} text-center font-black`}>Generate Content</p><br />
 
                                         {/* Tab to switch between literary and art content generators */}
                                         <div className={`flex justify-center items-center gap-5 f-full`}>
@@ -117,22 +120,22 @@ export default function GenerateScreen() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <p className={`${lightTheme ? ("text-green-dark") : ("text-white")} text-center`}>
-                                Oops. There is an error on our side. Hang tight until we resolve things.
-                            </p>
-                        </>
-                    )
-                ) :
-                    (
-                        <>
-                            <div className={"min-h-min-content-height"}></div>
-                        </>
-                    )
-                }
+                            </>
+                        ) : (
+                            <>
+                                <p className={`${lightTheme ? ("text-green-dark") : ("text-white")} text-center`}>
+                                    Oops. There is an error on our side. Hang tight until we resolve things.
+                                </p>
+                            </>
+                        )
+                    ) :
+                        (
+                            <>
+                                <LoadSpinner />
+                            </>
+                        )
+                    }
+                </div>
 
                 {/* Footer */}
                 <div className={"sticky"}>

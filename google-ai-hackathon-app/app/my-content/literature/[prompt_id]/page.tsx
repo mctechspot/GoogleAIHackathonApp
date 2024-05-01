@@ -7,6 +7,7 @@ import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import GeneratedLiteratureContent from "@/app/components/Content/GeneratedLiteratureContent"
 import { GeneratedLiteratureContentType, ContentHistoryError } from "@/app/types/ContentHistory"
 import { MdError } from "react-icons/md";
+import LoadSpinner from "@/app/components/Loaders/LoadSpinner"
 
 export default function LiteratureContentPage({ params }: { params: { prompt_id: string } }) {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
@@ -59,7 +60,11 @@ export default function LiteratureContentPage({ params }: { params: { prompt_id:
                                 </div>
                             </>
                         )
-                    ) : ("")}
+                    ) : (
+                        <>
+                            <LoadSpinner />
+                        </>
+                    )}
 
                 </div>
 

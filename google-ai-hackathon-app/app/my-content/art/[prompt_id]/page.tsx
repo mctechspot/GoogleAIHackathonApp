@@ -7,6 +7,7 @@ import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import GeneratedArtContent from "@/app/components/Content/GeneratedArtContent"
 import { GeneratedArtContentType, ContentHistoryError } from "@/app/types/ContentHistory"
 import { MdError } from "react-icons/md";
+import LoadSpinner from "@/app/components/Loaders/LoadSpinner"
 
 export default function ArtContentPage({ params }: { params: { prompt_id: string } }) {
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
@@ -59,7 +60,11 @@ export default function ArtContentPage({ params }: { params: { prompt_id: string
                                 </div>
                             </>
                         )
-                    ) : ("")}
+                    ) : (
+                        <>
+                            <LoadSpinner />
+                        </>
+                    )}
 
                 </div>
 

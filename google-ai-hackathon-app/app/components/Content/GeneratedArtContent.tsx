@@ -25,7 +25,10 @@ export default function GeneratedArtContent(response: GeneratedArtContentType) {
                     </>
                 ) : (
                     <>
-                        <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center font-black`}>Generated Art</p><br />
+                        <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center font-black`}>
+                            <Link href={"/my-content"}>My Content</Link>&nbsp;&gt;&nbsp;
+                            Generated Art
+                        </p><br />
 
                         <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
                             <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Prompt &nbsp; &nbsp;</span>

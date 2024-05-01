@@ -47,7 +47,10 @@ export default function GeneratedLiteratureContent(response: GeneratedLiterature
                     </>
                 ) : (
                     <>
-                        <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center font-black`}>Generated Literature</p><br />
+                        <p className={`${lightTheme ? ("text-black") : ("text-white")} text-center font-black`}>
+                            <Link href={"/my-content"}>My Content</Link>&nbsp;&gt;&nbsp;
+                            Generated Literature
+                        </p><br />
 
                         <p className={`${lightTheme ? ("text-black") : ("text-white")}`}>
                             <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Prompt &nbsp; &nbsp;</span>
