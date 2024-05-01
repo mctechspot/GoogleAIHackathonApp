@@ -9,7 +9,6 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 
-
 export default function UserSideBar() {
     const router = useRouter();
     const { data: session, status } = useSession();
