@@ -23,6 +23,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
             }, {
                 status: 400
             });
+        }else{
+            if(payload.prompt.trim().length > 300){
+                return NextResponse.json({
+                    "input_error": "Prompt must be 300 characters maximum.",
+                }, {
+                    status: 400
+                });   
+            }
         }
 
         // Get art style from database
