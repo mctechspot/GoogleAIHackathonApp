@@ -4,19 +4,20 @@ import { ThemeContext } from "@/app/components/Layouts/MainLayout"
 import Image from "next/image";
 import ContentTypeDropdown from "@/app/components/Dropdown/ContentTypeDropdown";
 import { CompleteUserFormType } from "@/app/types/Forms"
+import { ContentLookupDataType, ContentLookupDataError } from "@/app/types/ContentLookupData"
 import {
     TbRectangle,
     TbRectangleFilled,
-    TbRectangleVertical, 
+    TbRectangleVertical,
     TbRectangleVerticalFilled,
     TbSquare,
     TbSquareFilled
- } from "react-icons/tb";
+} from "react-icons/tb";
 
 
 export default function UserPromptForm(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
-        generatedContent, setGeneratedContent, contentCategory }: CompleteUserFormType) {
+        generatedContent, setGeneratedContent, contentCategory, contentLookupData }: CompleteUserFormType) {
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("");
@@ -78,13 +79,13 @@ export default function UserPromptForm(
         });
 
         const contentJson = await contentRes.json();
-        if("response" in contentJson){
-            if(contentCategory === 1){
-                setGeneratedContent({"response_text": contentJson.response});
-            }else{
-                setGeneratedContent({"response_images": contentJson.response});
+        if ("response" in contentJson) {
+            if (contentCategory === 1) {
+                setGeneratedContent({ "response_text": contentJson.response, "timestamp": contentJson.timestamp });
+            } else {
+                setGeneratedContent({ "response_images": contentJson.response, "timestamp": contentJson.timestamp });
             }
-        }else{
+        } else {
             setGeneratedContent(contentJson);
         }
         setContentGenerationRunning(false);
@@ -94,7 +95,9 @@ export default function UserPromptForm(
         <>
             <form id={"prompt-form"} className={"prompt-form"} onSubmit={(event) => handleUserPromptSubmit(event)}>
 
-                <p className={"text-center text-green-text font-black"}>Enter a prompt to get your content.</p><br />
+                <p className={"text-center text-green-text font-black"}>
+                    Enter a prompt to get your content.
+                </p><br />
 
                 <div className={"grid grid-cols-2 gap-5 max-[900px]:grid-cols-1"}>
                     {/* Content Type Generator */}
@@ -102,28 +105,29 @@ export default function UserPromptForm(
                         userPrompt={userPrompt}
                         setUserPrompt={setUserPrompt}
                         contentCategory={contentCategory}
+                        contentLookupData={contentLookupData}
                     />
                     {contentCategory !== 1 ? (
                         <>
                             <div className={"flex items-center gap-2"}>
-                                <p className={`${lightTheme ? ("text-black"):("text-white")}`}>Orientation </p>
+                                <p className={`${lightTheme ? ("text-green-dark") : ("text-white")}`}>Orientation </p>
+
                                 <div className={"flex items-center gap-2"}>
                                     <div className={`text-2xl cursor-pointer \
-                                    ${userPrompt.orientation === "1" ? ("text-green-text font-black") : (`${lightTheme ? ("text-green-text"):("text-white")}`)}`}
-                                    onClick={() => setUserPrompt({ ...userPrompt, orientation: "1" })}>
-                                        {userPrompt.orientation === "1" ? (<TbSquareFilled />): (<TbSquare />)}
+                                    ${userPrompt.orientation === "1" ? ("text-green-text font-black") : (`${lightTheme ? ("text-green-text") : ("text-white")}`)}`}
+                                        onClick={() => setUserPrompt({ ...userPrompt, orientation: contentLookupData.image_orientations[0].key })}>
+                                        {userPrompt.orientation === contentLookupData.image_orientations[0].key ? (<TbSquareFilled />) : (<TbSquare />)}
                                     </div>
                                     <div className={`text-2xl cursor-pointer \
-                                    ${userPrompt.orientation === "2" ? ("text-green-text font-black") : (`${lightTheme ? ("text-green-text"):("text-white")}`)}`}
-                                    onClick={() => setUserPrompt({ ...userPrompt, orientation: "2" })}>
-                                        {userPrompt.orientation === "2" ? (<TbRectangleVerticalFilled />): (<TbRectangleVertical/>)}
+                                    ${userPrompt.orientation === "2" ? ("text-green-text font-black") : (`${lightTheme ? ("text-green-text") : ("text-white")}`)}`}
+                                        onClick={() => setUserPrompt({ ...userPrompt, orientation: contentLookupData.image_orientations[1].key })}>
+                                        {userPrompt.orientation === contentLookupData.image_orientations[1].key ? (<TbRectangleVerticalFilled />) : (<TbRectangleVertical />)}
                                     </div>
 
-                                    {/* Landscape Orientation */}
                                     <div className={`text-2xl cursor-pointer \
-                                    ${userPrompt.orientation === "3" ? ("text-green-text font-black") : (`${lightTheme ? ("text-green-text"):("text-white")}`)}`}
-                                    onClick={() => setUserPrompt({ ...userPrompt, orientation: "3" })}>
-                                        {userPrompt.orientation === "3" ? (<TbRectangleFilled />): (<TbRectangle />)}
+                                    ${userPrompt.orientation === "3" ? ("text-green-text font-black") : (`${lightTheme ? ("text-green-text") : ("text-white")}`)}`}
+                                        onClick={() => setUserPrompt({ ...userPrompt, orientation: contentLookupData.image_orientations[2].key })}>
+                                        {userPrompt.orientation === contentLookupData.image_orientations[2].key ? (<TbRectangleFilled />) : (<TbRectangle />)}
                                     </div>
                                 </div>
                             </div>
@@ -135,14 +139,13 @@ export default function UserPromptForm(
 
                 <textarea
                     id={"prompt-text"} name={"prompt-text"}
-                    placeholder={"Give a topic for your content, e.g. island dreams."}
-                    className={`border ${lightTheme ? ("bg-white border-grey-pale text-black"):("bg-green-dark border-green-standard text-white")} \
+                    placeholder={"Give a short prompt topic with key terms comma separated, e.g. grey cat, night time. Maximum 300 characters."}
+                    className={`border ${lightTheme ? ("bg-white border-grey-pale text-black") : ("bg-green-dark border-green-standard text-white")} \
                      rounded min-w-full min-h-[150px] outline-green-standard resize-y p-5`}
+                    maxLength={300}
                     value={userPrompt.prompt}
-                    onChange={(event) => setUserPrompt({ ...userPrompt, prompt: event.target.value })}
-                >
+                    onChange={(event) => setUserPrompt({ ...userPrompt, prompt: event.target.value })}>
                 </textarea><br /><br />
-
 
                 {contentCategory === 1 ? (
                     <>
@@ -152,7 +155,7 @@ export default function UserPromptForm(
                             {/* Image  Input */}
                             <input type={"file"} id={"prompt-image"} name={"prompt-image"}
                                 accept={"image/jpeg, image/jpg, image/png"}
-                                className={`${lightTheme ? ("text-black"):("text-white")}`}
+                                className={`${lightTheme ? ("text-black") : ("text-white")}`}
                                 onChange={(event) => {
                                     {
                                         setUserPrompt({ ...userPrompt, image: event.target.files?.[0] });
@@ -175,8 +178,6 @@ export default function UserPromptForm(
                             ) : ("")}
 
 
-
-
                         </div><br />
                     </>
 
@@ -185,9 +186,9 @@ export default function UserPromptForm(
 
 
                 <div className={"flex gap-2 w-full"}>
-                    <button type={"submit"} className={"bg-green-standard rounded p-2 w-full font-black disabled:bg-green-disabled"}
+                    <button type={"submit"} className={"bg-green-standard rounded p-2 w-full text-green-dark font-black disabled:bg-green-disabled"}
                         disabled={contentGenerationRunning}>Generate</button>
-                    <button type={"button"} className={"bg-green-standard rounded font-black p-2 w-full"}
+                    <button type={"button"} className={"bg-green-standard rounded text-green-dark font-black p-2 w-full"}
                         onClick={() => {
                             setUserPrompt({ ...userPrompt, prompt: "", image: null });
                             setImagePreviewSrc("");

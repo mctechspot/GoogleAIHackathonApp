@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "target": "es2017",
+    "target": "es2017",
+    "target": "es2017",
+    "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -21,6 +25,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Dropdown/ContentTypeDropdowntsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Dropdown/ContentTypeDropdowntsx", "app/api/auth/[...next].js", "app/api/auth/[...nextauth].js"],
   "exclude": ["node_modules"]
 }

@@ -40,7 +40,8 @@ export default function About() {
                         </div>
 
                         <Link href={"/generate"}
-                            className={"block bg-green-standard px-10 py-5 w-fit m-auto text-center font-black rounded-lg"}>
+                            className={`block bg-green-standard px-10 py-5 w-fit m-auto \ 
+                            text-green-dark text-center font-black rounded-lg`}>
                             Try
                         </Link>
                     </div>

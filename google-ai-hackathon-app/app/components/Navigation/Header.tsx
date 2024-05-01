@@ -6,16 +6,14 @@ import Link from "next/link";
 import LogoLight from "@/public/assets/logo.png";
 import LogoDark from "@/public/assets/logo-dark.png";
 
-export default function Footer() {
+export default function Header() {
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
-    const startYear: number = 2024;
-    const currentYear: number = new Date().getFullYear();
 
     return (
         <>
             <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")} p-5`}>
-                <Link href={"/"}>
+                <Link href={"/"} className={"block m-auto w-fit"}>
                     <Image
                         src={lightTheme ? LogoLight : LogoDark}
                         alt={"Logo"}

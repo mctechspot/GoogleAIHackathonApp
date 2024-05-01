@@ -1,50 +1,60 @@
 "use client"
+import Link from "next/link";
 import contextProvider, { createContext, useContext, useEffect, useState } from "react"
 import ThemeToggle from "@/app/components/Toggles/ThemeToggle"
-
+import UserSideBar from "@/app/components/User/UserSideBar"
 export const ThemeContext = createContext({});
+import { SessionProvider } from "next-auth/react"
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
 
-    const [lightTheme, setLightTheme] = useState<boolean>(true);
+    const [lightTheme, setLightTheme] = useState<boolean | null>(null);
 
-    /*useEffect(() => {
+    useEffect(() => {
         fetchCurrentTheme();
-    }, []);*/
+    }, []);
 
-    // Function to get and set current theme based on value in localStorage
-    /*const fetchCurrentTheme = () => {
+    // Initialise theme if present in localStorage
+    const fetchCurrentTheme = () => {
         const currentTheme = localStorage.getItem("theme");
-        console.log(currentTheme)
-        if (!currentTheme || (currentTheme && JSON.stringify(currentTheme).trim().toLowerCase() === "light")) {
-            setLightTheme(true);
-        }else{
+        if (currentTheme && (currentTheme.trim().toLowerCase() === "dark")) {
             setLightTheme(false);
+        } else {
+            setLightTheme(true);
         }
-        console.log(currentTheme);
-    }*/
+    }
 
-    // Function to update theme in local storage when lightTheme state changes
+    // Update theme in  local starge when lightTheme state variable changes
     const updateThemeInLocalStorage = () => {
-        if(lightTheme){
+        if (lightTheme) {
             localStorage.setItem("theme", "light");
-        }else{
+        } else {
             localStorage.setItem("theme", "dark");
         }
     }
 
     useEffect(() => {
-        updateThemeInLocalStorage();
+        if (lightTheme !== null) {
+            updateThemeInLocalStorage();
+        }
     }, [lightTheme]);
 
     return (
         <>
-            <ThemeContext.Provider value={{ lightTheme, setLightTheme }}>
-                <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")}`}>
-                    <ThemeToggle />
-                    {children}
-                </div>
-            </ThemeContext.Provider>
+            <SessionProvider>
+                <ThemeContext.Provider value={{ lightTheme, setLightTheme }}>
+                    <>
+                        {lightTheme !== null ? (
+                            <div className={`${lightTheme ? ("bg-white") : ("bg-green-dark")} fade-in`}>
+                                <UserSideBar />
+                                <ThemeToggle />
+                                {children}
+                            </div>
+                        ) : ("")}
+
+                    </>
+                </ThemeContext.Provider>
+            </SessionProvider>
         </>
     );
 }

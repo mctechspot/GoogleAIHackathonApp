@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Zen_Kaku_Gothic_Antique } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/app/components/Layouts/MainLayout";
+
 const inter = Inter({ subsets: ["latin"] });
 
 const zenKakuGothicAntique = Zen_Kaku_Gothic_Antique({
@@ -25,9 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={"dark"}>
       <body className={`${inter.className} ${zenKakuGothicAntique.className}`}>
-        <MainLayout>
+          <MainLayout>
             {children}
-        </MainLayout>
+          </MainLayout>
       </body>
     </html>
   );

@@ -37,6 +37,9 @@ const config: Config = {
       fontFamily: {
         zenKakuGothicAntique: ['var(--font-zen-kaku-gothic-antique)'],
       },
+      minHeight: {
+        "min-content-height": "calc(100vh - (123 + 64))"
+      }
     },
   },
   plugins: [],

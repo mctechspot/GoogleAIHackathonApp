@@ -8,10 +8,11 @@ import { FaClipboardCheck, FaRegClipboard } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import GeneratedArtGrid from "@/app/components/Content/GeneratedArtGrid"
+import LoadSpinner from "@/app/components/Loaders/LoadSpinner"
 
 export default function GeneratedContent(
     { userPrompt, setUserPrompt, contentGenerationRunning, setContentGenerationRunning,
-        generatedContent, setGeneratedContent, contentCategory }: CompleteUserFormType) {
+        generatedContent, setGeneratedContent, contentCategory, contentLookupData }: CompleteUserFormType) {
 
     const { lightTheme, setLightTheme }: any = useContext(ThemeContext);
     const generatedContentContainer: RefObject<HTMLDivElement> | null = useRef(null);
@@ -49,7 +50,7 @@ export default function GeneratedContent(
                             // Replace "\n" line breaks with <br> tags
                             formattedContent = generatedContent.response_text.replaceAll(/\n/g, "<br>");
 
-                            // Replace ** content ** to reflect <b>content</b> format
+                            // Reformat ** content ** and ## content to reflect <b>content</b> format
                             formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
                         }
 
@@ -60,7 +61,8 @@ export default function GeneratedContent(
                     if ("response_images" in generatedContent) {
                         const jsxContent = <GeneratedArtGrid
                             response_images={generatedContent.response_images}
-                            orientation={userPrompt.orientation} />;
+                            orientation={userPrompt.orientation}
+                            timestamp={generatedContent.timestamp} />;
                         const htmlString = ReactDOMServer.renderToString(jsxContent);
                         generatedContentElement.innerHTML = htmlString;
                     }
@@ -101,9 +103,7 @@ export default function GeneratedContent(
                         <div className={"flex justify-center items-center"}>
                             <div>
                                 <p className={"text-center text-green-text font-black"}>Hang tight while we generate your content.</p><br />
-                                <div className={"flex justify-center items-center text-green-standard"}>
-                                    <CgSpinner className={"spin text-[100px]"} />
-                                </div>
+                                <LoadSpinner />
                             </div>
                         </div>
                     </>
@@ -176,6 +176,18 @@ export default function GeneratedContent(
                                         <MdError />
                                     </div><br />
                                     <p className={`text-center ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>Error generating content. Try again.</p><br />
+                                </div>
+                            </>
+                        ) : ("")}
+
+                        {/* Display input error response */}
+                        {"input_error" in generatedContent ? (
+                            <>
+                                <div className={"m-2"}>
+                                    <div className={`flex justify-center text-center text-[50px] ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>
+                                        <MdError />
+                                    </div><br />
+                                    <p className={`text-center ${lightTheme ? ("text-red-error") : ("text-red-error-medium")} font-black`}>{generatedContent.input_error}</p><br />
                                 </div>
                             </>
                         ) : ("")}

@@ -10,15 +10,27 @@
   },
   "dependencies": {
     "@fontsource/zen-kaku-gothic-antique": "^5.0.19",
+    "@google-cloud/storage": "^7.10.1",
+    "@google-cloud/vertexai": "^1.1.0",
+    "@google/generative-ai": "^0.8.0",
+    "googleapis": "^135.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.45",
     "next": "14.2.2",
+    "next-auth": "^4.24.7",
     "next-themes": "^0.3.0",
+    "node-postgres": "^0.6.2",
+    "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.1.0",
-    "sharp": "^0.33.3"
+    "sharp": "^0.33.3",
+    "uuidv7": "^0.6.3"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
+    "@types/pg": "^8.11.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
