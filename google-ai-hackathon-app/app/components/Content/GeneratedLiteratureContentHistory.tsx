@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image"
 import Link from "next/link"
-import { useContext, useEffect, useState } from "react"
+import { RefObject, useContext, useEffect, useState } from "react"
 import { ThemeContext } from "@/app/components/Layouts/MainLayout";
 import { GeneratedLiteratureHistoryListType, GeneratedLiteratureHistoryType } from "@/app/types/ContentHistory"
 import { IoIosWarning } from "react-icons/io";
@@ -17,10 +17,11 @@ export default function GeneratedLiteratureContentHistory({ response }: Generate
         if (content.trim() !== "") {
             // Format content for html
             // Replace "\n" line breaks with <br> tags
-            formattedContent = content.replaceAll(/\n/g, "\n");
+            formattedContent = content.replaceAll(/\n/g, "<br>");
 
             // Reformat ** content ** and ## content to reflect <b>content</b> format
             formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+            formattedContent = formattedContent.replaceAll(/##\s*(.*?)<br>/g, "<b>$1</b><br>");
         }
 
         return formattedContent.substring(0, 200) + "...";
@@ -113,7 +114,9 @@ export default function GeneratedLiteratureContentHistory({ response }: Generate
                                                         <span className={`${lightTheme ? ("") : ("")} text-green-text font-black`}>Content &nbsp; &nbsp;</span>
                                                         {generatedContent.content ? (
                                                             <>
-                                                                {formatLiteratureContentPreview(generatedContent.content?.content)}
+                                                                <div>
+                                                                    {formatLiteratureContentPreview(generatedContent.content?.content)}
+                                                                </div>
                                                             </>
                                                         ) : ("")}
                                                     </p>

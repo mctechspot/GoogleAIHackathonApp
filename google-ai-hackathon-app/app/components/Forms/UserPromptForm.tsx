@@ -171,7 +171,7 @@ export default function UserPromptForm(
                                         alt={'Image Preview'}
                                         height={"200"}
                                         width={"200"}
-                                        className={`block m-auto h-auto w-[200px]`}
+                                        className={`block m-auto h-auto w-[200px] rounded`}
                                         style={{ display: imagePreviewSrc === "" ? "none" : "block" }}
                                     />
                                 </>

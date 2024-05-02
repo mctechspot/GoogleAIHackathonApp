@@ -14,7 +14,6 @@ export default function ContentTypeDropdown({ userPrompt, setUserPrompt,
     const [dropdownData, setDropdownData] = useState<any[]>(contentLookupData.literature_content_types);
     const [selectedDropdownDisplayValue, setSelectedDropdownDisplayValue] = useState<any>(contentLookupData.literature_content_types[0].value);
 
-    console.log(dropdownData);
     useEffect(() => {
         window.addEventListener('click', toggleDropdown);
         return () => {
