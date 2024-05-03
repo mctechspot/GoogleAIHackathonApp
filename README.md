@@ -53,3 +53,95 @@
 <p>NEXTAUTH_URL="http://localhost:3000"</p>
 
 
+## DATABASE SETUP
+<p>Connect to the database in DBeaver, open an SQL script and execute the following code to create all entity tables and relationships.</p>
+
+<div>
+create table users(
+	id UUID not null primary key,
+	email VARCHAR(255) not null unique,
+	created_at TIMESTAMP not null,
+	last_login TIMESTAMP not null
+);
+
+create table literature_content_types(
+	id UUID not null primary key,
+	content_type VARCHAR(255) not null
+);
+
+create table art_styles(
+	id UUID not null primary key,
+	style VARCHAR(255) not null
+);
+
+create table image_orientations(
+	id UUID not null primary key,
+	orientation VARCHAR(255) not null,
+	ratio VARCHAR(3) not null
+);
+
+CREATE TABLE literature_prompts (
+    id UUID NOT NULL PRIMARY KEY,
+    user_id UUID not null,
+    prompt TEXT NOT NULL,
+    image_path TEXT NULL,
+    content_type UUID NOT NULL,
+    request_timestamp TIMESTAMP NOT NULL,
+    response_timestamp TIMESTAMP NOT NULL,
+    success INTEGER NOT null,
+    warning_or_error INTEGER null,
+    warning_or_error_message TEXT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (content_type) REFERENCES literature_content_types(id),
+    CHECK (
+        (success = 1 AND warning_or_error IS NULL AND warning_or_error_message IS NULL) OR 
+        (success = 0 AND warning_or_error IS NOT NULL AND warning_or_error_message IS NOT NULL)
+    ),
+    CHECK (success IN (0, 1)),
+    CHECK (warning_or_error IN (1, 2))
+);
+
+CREATE TABLE art_prompts (
+    id UUID NOT NULL PRIMARY KEY,
+    user_id UUID not null,
+    prompt TEXT NOT NULL,
+    art_style UUID NOT NULL,
+    orientation UUID NOT NULL,
+    request_timestamp TIMESTAMP NOT NULL,
+    response_timestamp TIMESTAMP NOT NULL,
+    success INTEGER NOT NULL,
+    warning_or_error INTEGER NULL,
+    warning_or_error_message TEXT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (art_style) REFERENCES art_styles(id),
+    FOREIGN KEY (orientation) REFERENCES image_orientations(id),
+    CHECK (
+        (success = 1 AND warning_or_error IS NULL AND warning_or_error_message IS NULL) OR 
+        (success = 0 AND warning_or_error IS NOT NULL AND warning_or_error_message IS NOT NULL)
+    ),
+    CHECK (success IN (0, 1)),
+    CHECK (warning_or_error IN (0, 1))
+);
+
+create TABLE generated_literature(
+	id UUID not null primary key,
+	user_id UUID not  null,
+	prompt UUID not null,
+	content text not null,
+	foreign key (user_id) references users(id),
+	foreign key (prompt) references literature_prompts(id)
+);
+
+create TABLE generated_art(
+	id UUID not null primary key,
+	user_id UUID not  null,
+	prompt UUID not null,
+	image_no INTEGER not null,
+	image_path TEXT not null,
+	foreign key (user_id) references users(id),
+	foreign key (prompt) references art_prompts(id)
+);
+</div>
+
+<p>In order for the application to work, you need to add some look up data to some of the columns</p>
+
