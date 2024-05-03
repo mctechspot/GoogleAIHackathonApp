@@ -44,7 +44,7 @@
 <ul>
   <li>Create a Google Cloud Project <a href="https://console.cloud.google.com/projectcreate">here</a>.</li>
   <li>Make sure to copy the project ID and location for later use.</li>
-  <li>Create a <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank">service account key</a> in JSON format for the Google project. Convert the JSON content to a base64 string with the jsonToBase64 function found <a href="/google-ai-hackathon-app/utils/DataParsing.tsx">here</a>. You will need this output string later.</li>
+  <li>Create a <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank">service account key</a> in JSON format for the Google project. Convert the JSON content to a base64 string with the jsonToBase64 function found <a href="google-ai-hackathon-app/app/utils/DataParsing.tsx">here</a>. You will need this output string later.</li>
   <li>Go to the Google <a href="https://console.cloud.google.com/apis/credentials" target="_blank">credentials</a> page to geenrate an OAuth 2.0 Client ID for Google authentication in the Next.js application. For this credentials, add an entry under the authorised redirect URIs setting it to "http://localhost:3000/api/auth/callback/google". Copy the client ID and client secret of this credential sofr later use.</li>
   <li>Create a <a href="https://aistudio.google.com/app/apikey" target="_blank">Google Gemini API Key</a>. (** Gemini is not available in all locations, so you might need to connect to a VPN to make the application work)</li>
   <li>Request access to <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview" target="_blank">Imagen</a> on Google Vertex AI.</li>
