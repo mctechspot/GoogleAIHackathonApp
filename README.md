@@ -56,6 +56,7 @@
 ## DATABASE SETUP
 <p>Connect to the database in DBeaver, open an SQL script and execute the following code to create all entity tables and relationships.</p>
 
+### SQL CODE
 <div>
 create table users(
 	id UUID not null primary key,
@@ -141,7 +142,88 @@ create TABLE generated_art(
 	foreign key (user_id) references users(id),
 	foreign key (prompt) references art_prompts(id)
 );
-</div>
+</div><br><br>
 
-<p>In order for the application to work, you need to add some look up data to some of the columns</p>
+<p>In order for the application to work, you need to add some look up data to some of the tables. You will need to generate a UUID7 value for each entry. You can do so here <a href="https://www.uuidgenerator.net/version7">here</a>.</p>
+
+<p>Insert the following content into the literature_content_types table.</p>
+<table>
+  <tr>
+    <th>id</th>
+    <th>content_type</th>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Story</td>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Play</td>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Poem</td>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Song</td>
+  </tr>
+</table>
+
+<p>Insert the following content into the art_styles table.</p>
+<table>
+  <tr>
+    <th>id</th>
+    <th>style</th>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Photography</td>
+  </tr>
+ <tr>
+    <td>$generated_uuid7</td>
+    <td>Oil</td>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Acrylic</td>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Watercolour</td>
+  </tr>
+	<tr>
+    <td>$generated_uuid7</td>
+    <td>Digital</td>
+  </tr>
+<tr>
+    <td>$generated_uuid7</td>
+    <td>Sketch</td>
+  </tr>
+</table>
+
+<p>Insert the following content into the image_orientations table.</p>
+<table>
+  <tr>
+    <th>id</th>
+    <th>orientation</th>
+	<th>ratio</th>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Square</td>
+<td>1:1</td>
+  </tr>
+  <tr>
+    <td>$generated_uuid7</td>
+    <td>Photography</td>
+<td>3:4</td>
+  </tr>
+	 <tr>
+    <td>$generated_uuid7</td>
+    <td>Landscape</td>
+<td>4:3</td>
+  </tr>
+</table>
+
 
