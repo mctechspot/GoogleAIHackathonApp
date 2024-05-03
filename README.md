@@ -26,6 +26,15 @@
 
 
 ## Project Setup
+<p>You need to set up the Next.js project.</p>
+
+<p>First make sure you have <a href="https://git-scm.com/">Git</a> installed.</p>
+<p>First make sure you have <a href="https://nodejs.org/en">Node</a> installed.</p>
+<p>Install some type of code editor such as <a href="https://code.visualstudio.com/">Visual Studio Code</a>.</p>
+<p>Open Visual studio code from some secure folder in your computer and clone this repository with the following terminal command: git clone https://github.com/thelearner411/GoogleAIHackathonApp</p>
+<p>Enter the Next.js app project directory by executing the following command: cd google-ai-hackathon-app</p>
+
+<p>You will need to create some necessary Google and database credentials to make the app run smoothly.</p>
 <ul>
   <li>Create a Google Cloud Project <a href="https://console.cloud.google.com/projectcreate">here</a>.</li>
   <li>Make sure to copy the project ID and location for later use.</li>
@@ -226,4 +235,13 @@ create TABLE generated_art(
   </tr>
 </table>
 
+<p>Finally you can run the Next.js application with the following commands.</p>
+<ul>
+	<li>npm install</li>
+	<li>npm run dev</li>
+</ul>
+
+<p>You should see the application running at http://localhost:3000</p>
+
+<p>Enjoy Jenna!</p>
 
