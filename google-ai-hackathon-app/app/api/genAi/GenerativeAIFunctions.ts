@@ -45,7 +45,6 @@ export const generateTextFromTextPrompt = async (
     try {
         // Construct string for final prompt with content type and user input prompt text
         const contentTypeFinal: string =  contentType === "poem" || contentType === "story" ? `${contentType} that rhymes` : contentType;
-        console.log(contentTypeFinal);
         const finalPrompt: string = `Write a ${contentTypeFinal} with the following prompt: ${prompt}.
         Include an appropriate title in bold for the content generated in the final response.
         Do not cut the content off. It should be complete and fit under 1100 characters maximum.`
@@ -100,7 +99,6 @@ export const generateTextFromTextAndImagePrompt = async (
 
             // Construct final content generation prompt with content type and user input propt text
             const contentTypeFinal: string =  contentType === "poem" || contentType === "story" ? `${contentType} that rhymes` : contentType;
-            console.log(contentTypeFinal);
             const final_prompt: string = `Write a ${contentTypeFinal} about this image with the following prompt: ${prompt}. 
             Include an appropriate title in bold for the content generated in the final response.
             Do not cut the content off. It should be complete and fit under 1100 characters maximum.`;
