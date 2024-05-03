@@ -44,8 +44,11 @@ export const generateTextFromTextPrompt = async (
 
     try {
         // Construct string for final prompt with content type and user input prompt text
-        const finalPrompt: string = `Write a ${contentType} with the following prompt: ${prompt}.
-        Include an appropriate title in bold for the content generated in the final response.`
+        const contentTypeFinal: string =  contentType === "poem" || contentType === "story" ? `${contentType} that rhymes` : contentType;
+        console.log(contentTypeFinal);
+        const finalPrompt: string = `Write a ${contentTypeFinal} with the following prompt: ${prompt}.
+        Include an appropriate title in bold for the content generated in the final response.
+        Do not cut the content off. It should be complete and fit under 1100 characters maximum.`
 
         // Build content parameters for generative AI model
         let requestContents: any = {
@@ -96,8 +99,11 @@ export const generateTextFromTextAndImagePrompt = async (
             const imageParts: any = [filePart];
 
             // Construct final content generation prompt with content type and user input propt text
-            const final_prompt: string = `Write a ${contentType} about this image with the following prompt: ${prompt}. 
-            Include an appropriate title in bold for the content generated in the final response.`;
+            const contentTypeFinal: string =  contentType === "poem" || contentType === "story" ? `${contentType} that rhymes` : contentType;
+            console.log(contentTypeFinal);
+            const final_prompt: string = `Write a ${contentTypeFinal} about this image with the following prompt: ${prompt}. 
+            Include an appropriate title in bold for the content generated in the final response.
+            Do not cut the content off. It should be complete and fit under 1100 characters maximum.`;
             const result = await textFromTextAndImageModel.generateContent([final_prompt, ...imageParts]);
             const response = await result.response;
 

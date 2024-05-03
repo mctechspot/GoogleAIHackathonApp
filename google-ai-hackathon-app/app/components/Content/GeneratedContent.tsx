@@ -52,6 +52,7 @@ export default function GeneratedContent(
 
                             // Reformat ** content ** and ## content to reflect <b>content</b> format
                             formattedContent = formattedContent.replaceAll(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                            formattedContent = formattedContent.replaceAll(/##\s*(.*?)<br>/g, "<b>$1</b><br>");
                         }
 
                         generatedContentElement.innerHTML = formattedContent;

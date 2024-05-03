@@ -54,14 +54,12 @@ export default function GeneratedArtGrid({ response_images, orientation }: Gener
         setDownloadImagesRunning(false);
     }
 
-
-
     return (
         <>
             <div className={"grid grid-col-1 gap-10"}>
                 {response_images.length === 0 ? (
                     <>
-                        <p className={`text-center ${lightTheme ? ("text-black"):("text-white")}`}>Erm... we are having trouble generating an image for this prompt.
+                        <p className={`text-center ${lightTheme ? ("text-black") : ("text-white")}`}>Erm... we are having trouble generating an image for this prompt.
                             Why don&apos;t you try another one?
                         </p>
                     </>
@@ -85,20 +83,20 @@ export default function GeneratedArtGrid({ response_images, orientation }: Gener
                                                         index === 2 ? image3Ref : null}
                                             />
                                         </div>
-                                        <div key={`genrated-image-download-icon-container-${index + 1}`}
+                                        {/*<div key={`genrated-image-download-icon-container-${index + 1}`}
                                             className={"absolute bottom-0 right-0 m-5 \
                                         bg-green-standard text-black rounded cursor-pointer w-fit p-2"}>
                                             <FaDownload
                                                 key={`generated-image-download-icon-${index + 1}`}
                                                 onClick={() => triggerImagesDownload((index + 1).toString())}
                                             />
-                                        </div>
+                                                </div>*/}
                                     </div>
                                 </>
                             );
                         })}
-                        <button className={"bg-green-standard p-2 text-black font-black rounded"}
-                            onClick={() => triggerImagesDownload("all")}>Download All</button>
+                        {/*<button className={"bg-green-standard p-2 text-black font-black rounded"}
+                            onClick={() => triggerImagesDownload("all")}>Download All</button>*/}
                     </>
                 )}
             </div >
