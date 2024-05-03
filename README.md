@@ -19,7 +19,7 @@
 </p>
 
 <p>
-  For art content, the user may enter a text prompt as well as an art style - photography, oil, acrylic, watercolour, digital or sketch - and an image ration - square, portrait or landscape - in order to generate up to 3 images.
+  For art content, the user may enter a text prompt as well as an art style - photography, oil, acrylic, watercolour, digital or sketch - and an image ratio - square, portrait or landscape - in order to generate up to 3 images.
 </p>
 
 <p>The user also has the option to authenticate a browser session with a Google account so that their content is saved.</p>
@@ -45,13 +45,13 @@
   <li>Create a Google Cloud Project <a href="https://console.cloud.google.com/projectcreate">here</a>.</li>
   <li>Make sure to copy the project ID and location for later use.</li>
   <li>Create a <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank">service account key</a> in JSON format for the Google project. Convert the JSON content to a base64 string with the jsonToBase64 function found <a href="google-ai-hackathon-app/app/utils/DataParsing.tsx">here</a>. You will need this output string later.</li>
-  <li>Go to the Google <a href="https://console.cloud.google.com/apis/credentials" target="_blank">credentials</a> page to geenrate an OAuth 2.0 Client ID for Google authentication in the Next.js application. For this credentials, add an entry under the authorised redirect URIs setting it to "http://localhost:3000/api/auth/callback/google". Copy the client ID and client secret of this credential sofr later use.</li>
+  <li>Go to the Google <a href="https://console.cloud.google.com/apis/credentials" target="_blank">credentials</a> page to geenrate an OAuth 2.0 Client ID for Google authentication in the Next.js application. For this credentials, add an entry under the authorised redirect URIs setting it to "http://localhost:3000/api/auth/callback/google". Copy the client ID and client secret of this credential for later use.</li>
+    <li>Generate a NextAuth secret with the following terminal command: openssl rand -base64 32</li>
   <li>Create a <a href="https://aistudio.google.com/app/apikey" target="_blank">Google Gemini API Key</a>. (** Gemini is not available in all locations, so you might need to connect to a VPN to make the application work)</li>
   <li>Request access to <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview" target="_blank">Imagen</a> on Google Vertex AI.</li>
-  <li>In your Google Cloud Project, create a <a href="https://console.cloud.google.com/storage" target="_blank">Storage Bucket</a> and save the name of this bucket for later use. This bucket is important to save image used in prompts as well as generated images.</li>
+  <li>In your Google Cloud Project, create a <a href="https://console.cloud.google.com/storage" target="_blank">Storage Bucket</a> and save the name of this bucket for later use. This bucket is important to save images used in prompts as well as generated images.</li>
   <li>Install <a href="https://www.pgadmin.org/" target="_blank">pgAdmin</a> on your device and create a database with credentials to store user content metadata</li>
   <li>Install <a href="https://dbeaver.io/" target="_blank">DBeaver</a> to connect to the database using the database credentials created in the previous step.</li>
-  <li>Generate a </li>
 </ul>
 
 <p>Now that all essential variables are created, it is time to set up the environment files. Create a .env file in the google-ai-hackathon-app folder and add the following variables.</p>
@@ -68,9 +68,8 @@
 <p>NEXTAUTH_URL="http://localhost:3000"</p>
 
 ## DATABASE SETUP
-<p>Connect to the database in DBeaver, open an SQL script and execute the following code to create all entity tables and relationships.</p>
 
-<p>This project uses the following database structure to save generated content for an authenticated user</p>
+<p>This project uses a PosgreSQL database with the following structure to in order to save generated content for an authenticated user</p>
 
 <p align="center">
   <img
@@ -81,6 +80,9 @@
   style="display: block; margin: auto;"
   />
 </p>
+
+<p>Connect to the database in DBeaver, open an SQL script and execute the following code to create all entity tables and relationships.</p>
+
 
 ### SQL CODE
 <div>
