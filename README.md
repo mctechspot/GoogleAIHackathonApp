@@ -2,7 +2,7 @@
 
 <p align="center">
   <img
-  src="https://github.com/thelearner411/GoogleAIHackathonApp/blob/main/google-ai-hackathon-app/public/assets/banner.gif"
+  src="google-ai-hackathon-app/public/assets/banner.gif"
   alt="GitHub Profile Banner"
   width="450"
   height="auto"
@@ -11,7 +11,7 @@
 </p>
 
 <p>
-  This project is a full-stack web application called Jenna, made as a submission for the 2024 Google AI Hackathon. The name "Jenna" is a play on the term GenAI or Generative Artificial Intelligence. The application uses user prompts to produce literature and art content.
+  This project is a full-stack web application called Jenna, made as a submission for the 2024 Google AI Hackathon. The name "Jenna" is a play on the term GenAI or Generative Artificial Intelligence. The application uses the Google VertexAI API and the Google Gemini API to produce literature and art content.
 </p>
 
 <p>
@@ -24,6 +24,12 @@
 
 <p>The user also has the option to authenticate a browser session with a Google account so that their content is saved.</p>
 
+## TECHNOLOGIES USED
+<ul>
+	<li>Google Cloud Platform to manage cloud services - Vertex AI API, Gemini API, OAuth 2.0, Cloud Storage</li>
+	<li>Next.js for the full-stack application</li>
+	<li>PostgreSQL for the database</li>
+</ul>
 
 ## Project Setup
 <p>You need to set up the Next.js project.</p>
@@ -64,6 +70,18 @@
 
 ## DATABASE SETUP
 <p>Connect to the database in DBeaver, open an SQL script and execute the following code to create all entity tables and relationships.</p>
+
+<p>This project uses the following database structure to save generated content for an authenticated user</p>
+
+<p align="center">
+  <img
+  src="google-ai-hackathon-app/public/assets/google-ai-hackathon-app-erd.png"
+  alt="GitHub Profile Banner"
+  width="450"
+  height="auto"
+  style="display: block; margin: auto;"
+  />
+</p>
 
 ### SQL CODE
 <div>
@@ -245,3 +263,8 @@ create TABLE generated_art(
 
 <p>Enjoy Jenna!</p>
 
+<p>You can see a video demo clicking on the link below. </p>
+
+[![Watch the video demo](google-ai-hackathon-app/public/assets/logo.png)](https://www.youtube.com/watch?v=ik1Hvdwb1Xo](https://www.youtube.com/watch?v=fD9OX1PmAYU "Jenna Video Demo")
+
+<p>**NB: An isolated FastAPI backend application with the same content generation endpoints can be found <a href="https://github.com/thelearner411/GoogleAIHackathonAPI">here</a>.</p>
